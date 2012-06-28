@@ -221,7 +221,7 @@
 		if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
 			send_file_not_found();
 		}
-		send_stored_file($file,86400,0,false,$file->get_filename(),false);
+		send_stored_file($file,86400,0,false,array('filename' => $file->get_filename()),false);
 		die;
 	}
 ?>
