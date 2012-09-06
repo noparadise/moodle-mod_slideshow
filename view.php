@@ -47,89 +47,89 @@
                 </STYLE>';
         }
     } else { // normal page header
-	    echo $OUTPUT->header();
+        echo $OUTPUT->header();
     }
 /// Print the main part of the page
     slideshow_secure_script($CFG->slideshow_securepix); // prints javascript ("open image in new window" also conditional on $CFG->slideshow_securepix)
     $conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
     $file_records =  $DB->get_records('files', $conditions);
     $fs = get_file_storage();
-	$files = array();
-	$thumbs = array();
-	$resized =  array();
-	$showdir = '/';
-	foreach ($file_records as $file_record) {
-		// check only image files
-        if (  eregi("\.jpe?g$", $file_record->filename) || eregi("\.gif$", $file_record->filename) || eregi("\.png$", $file_record->filename)) {
+    $files = array();
+    $thumbs = array();
+    $resized =  array();
+    $showdir = '/';
+    foreach ($file_records as $file_record) {
+        // check only image files
+        if (  preg_match("/\.jpe?g$/", $file_record->filename) || preg_match("/\.gif$/", $file_record->filename) || preg_match("/\.png$/", $file_record->filename)) {
             $showdir = $file_record->filepath;
-            if (eregi("^thumb_", $file_record->filename)) {
-				$filename = str_replace('thumb_','',$file_record->filename);
-				$thumbs[$filename] = $filename;
-				continue;
-			}
-			if (eregi("^resized_", $file_record->filename)) {
-				$filename = str_replace('resized_','',$file_record->filename);
-				$resized[$filename] = $filename;
-				continue;
-			}
-			$files[$file_record->filename] = new stored_file($fs, $file_record,'content');
-		}
+            if (preg_match("/^thumb_/", $file_record->filename)) {
+                $filename = str_replace('thumb_','',$file_record->filename);
+                $thumbs[$filename] = $filename;
+                continue;
+            }
+            if (preg_match("/^resized_/", $file_record->filename)) {
+                $filename = str_replace('resized_','',$file_record->filename);
+                $resized[$filename] = $filename;
+                continue;
+            }
+            $files[$file_record->filename] = new stored_file($fs, $file_record,'content');
+        }
     }
 
     $img_count = 0;
     $maxwidth = $CFG->slideshow_maxwidth;
-	$maxheight = $CFG->slideshow_maxheight; 
+    $maxheight = $CFG->slideshow_maxheight; 
     $urlroot = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_slideshow/content/0';
     //$urlroot = $CFG->wwwroot.'/mod/slideshow/pluginfile.php/'.$context->id.'/mod_slideshow/content/0';
     $baseurl = $urlroot.$showdir;
     $filearray = array();
-	$error = '';
+    $error = '';
     foreach ($files as $filename => $file) {
         // OK, let's look at the pictures in the folder ...
         //  iterate and process images 
-		if (in_array($filename, $thumbs) || in_array($filename, $resized)) {
-			continue; // done those already
-		}
+        if (in_array($filename, $thumbs) || in_array($filename, $resized)) {
+            continue; // done those already
+        }
         $filearray[$filename] = $filename;
-		// create thumbnail if non existant 
-		$tfile_record = array('contextid'=>$file->get_contextid(), 'filearea'=>$file->get_filearea(),
+        // create thumbnail if non existant 
+        $tfile_record = array('contextid'=>$file->get_contextid(), 'filearea'=>$file->get_filearea(),
             'component'=>$file->get_component(),'itemid'=>$file->get_itemid(), 'filepath'=>$file->get_filepath(),
             'filename'=>'thumb_'.$file->get_filename(), 'userid'=>$file->get_userid());
-		try {
-			// this may fail for various reasons
-			$fs->convert_image($tfile_record, $file, 80, 60, true);
-		} catch (Exception $e) {
-			//oops!
-			$img_count=0;
-	        $error = '<p><b>'.$e->getMessage().'</b> '.$filename.'</p>';
-			break;
-		}
-		// create resized image if non existant 
-		$tfile_record = array('contextid'=>$file->get_contextid(), 'filearea'=>$file->get_filearea(),
+        try {
+            // this may fail for various reasons
+            $fs->convert_image($tfile_record, $file, 80, 60, true);
+        } catch (Exception $e) {
+            //oops!
+            $img_count=0;
+            $error = '<p><b>'.$e->getMessage().'</b> '.$filename.'</p>';
+            break;
+        }
+        // create resized image if non existant 
+        $tfile_record = array('contextid'=>$file->get_contextid(), 'filearea'=>$file->get_filearea(),
             'component'=>$file->get_component(),'itemid'=>$file->get_itemid(), 'filepath'=>$file->get_filepath(),
             'filename'=>'resized_'.$file->get_filename(), 'userid'=>$file->get_userid());
-		try {
-			// this may fail for various reasons
-			$fs->convert_image($tfile_record, $file, $maxwidth, $maxheight, true);
-		} catch (Exception $e) {
-			//oops!
-			$img_count=0;
-	        $error = '<p><b>'.$e->getMessage().'</b> '.$filename.'</p>';
-			break;
-		}
-		if(!$slideshow->keeporiginals) {
-			$file->delete(); // dump the original
-		}
+        try {
+            // this may fail for various reasons
+            $fs->convert_image($tfile_record, $file, $maxwidth, $maxheight, true);
+        } catch (Exception $e) {
+            //oops!
+            $img_count=0;
+            $error = '<p><b>'.$e->getMessage().'</b> '.$filename.'</p>';
+            break;
+        }
+        if(!$slideshow->keeporiginals) {
+            $file->delete(); // dump the original
+        }
         $img_count ++;
     }
-	if ($img_count == 0 and count($resized) > 0) {
-		$filearray = $resized;
-		$img_count = count($filearray);
-	} elseif ($img_count < count($resized)) {
-		$filearray = array_merge($filearray,$resized);
-		$img_count = count($filearray);
-	}
-		
+    if ($img_count == 0 and count($resized) > 0) {
+        $filearray = $resized;
+        $img_count = count($filearray);
+    } elseif ($img_count < count($resized)) {
+        $filearray = array_merge($filearray,$resized);
+        $img_count = count($filearray);
+    }
+        
     sort($filearray);
     if ($slideshow->centred){
         echo'<div align="center">';
@@ -145,7 +145,7 @@
         }
         // process caption text
         $currentimage = slideshow_filetidy($filearray[$img_num]);
-		$caption_array[$currentimage] = slideshow_caption_array($slideshow->id,$currentimage);
+        $caption_array[$currentimage] = slideshow_caption_array($slideshow->id,$currentimage);
             
         if (isset($caption_array[$currentimage])){
             $captionstring =  $caption_array[$currentimage]['caption'];
@@ -190,12 +190,12 @@
                 .($cm->id)."&autoshow=1', 'popup', 'menubar=0,location=0,scrollbars,resizable,width=$popwidth,height=$popheight', 0);\">"
                 .get_string('autopopup','slideshow')."</a>";
             if(! $CFG->slideshow_securepix){
-				if (isset($slideshow->keeporiginals) and 
-					$DB->record_exists('files', array('contextid'=>$context->id, 'filepath'=>$showdir, 'filename' => $filearray[$img_num]))) {
-					echo '<br /><a href="'.$baseurl.$filearray[$img_num].'" target="_blank">'.get_string('open_new', 'slideshow').'</a>';
-				} else {
-					echo '<br /><a href="'.$baseurl.'resized_'.$filearray[$img_num].'" target="_blank">'.get_string('open_new', 'slideshow').'</a>';
-				}
+                if (isset($slideshow->keeporiginals) and 
+                    $DB->record_exists('files', array('contextid'=>$context->id, 'filepath'=>$showdir, 'filename' => $filearray[$img_num]))) {
+                    echo '<br /><a href="'.$baseurl.$filearray[$img_num].'" target="_blank">'.get_string('open_new', 'slideshow').'</a>';
+                } else {
+                    echo '<br /><a href="'.$baseurl.'resized_'.$filearray[$img_num].'" target="_blank">'.get_string('open_new', 'slideshow').'</a>';
+                }
             }   
             if (has_capability('moodle/course:update',$context)){
                 echo '<br /><a href="captions.php?id='.$cm->id.'">'.get_string('edit_captions', 'slideshow').'</a></p>';
@@ -211,7 +211,7 @@
             } else {
                 echo "||";
             }
-			echo '<a href="?id='.($cm->id).'&img_num='.fmod($img_num+1,$img_count).'&autoshow='.$autoshow."\">&gt;&gt;</a></p>";
+            echo '<a href="?id='.($cm->id).'&img_num='.fmod($img_num+1,$img_count).'&autoshow='.$autoshow."\">&gt;&gt;</a></p>";
         }
     } else {
         echo '<p>'.get_string('none_found', 'slideshow').' <b>'.$showdir.'</b></p>';

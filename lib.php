@@ -15,7 +15,7 @@
             case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
             case FEATURE_GRADE_HAS_GRADE:         return false;
             case FEATURE_GRADE_OUTCOMES:          return false;
-			case FEATURE_BACKUP_MOODLE2:          return true;
+            case FEATURE_BACKUP_MOODLE2:          return true;
 
             default: return null;
         }
@@ -51,7 +51,7 @@
         return $data->id;
     }
 
-	function slideshow_update_instance($data, $mform) {
+    function slideshow_update_instance($data, $mform) {
         global $CFG, $DB;
         $cmid        = $data->coursemodule;
         $draftitemid = $data->location;
@@ -67,8 +67,8 @@
         return true;
     }
 
-	function slideshow_delete_instance($id) {
-	global $DB;
+    function slideshow_delete_instance($id) {
+    global $DB;
         if (! $slideshow = $DB->get_record("slideshow", array("id" => $id))) {
             return false;
         }
@@ -173,22 +173,22 @@
             $captions['image'] = $image;
             $captions['title'] = '';
             $captions['caption'] = '';
-		}
+        }
         return ($captions);
     }
     
     function slideshow_write_captions($captions,$slideshow){
-	global $DB;
+    global $DB;
         $DB->delete_records('slideshow_captions', array('slideshow' => $slideshow->id));
         for ($i=1;$i<$captions->imagenum;$i++) {
             $newcaption->slideshow = $slideshow->id;
             $newcaption->image = $captions->{"image".$i};
             $newcaption->title = $captions->{"title".$i};
-			if ($slideshow->htmlcaptions) {
-				$newcaption->caption = $captions->{"caption".$i}['text'];
-			} else {
-				$newcaption->caption = $captions->{"caption".$i};
-			}
+            if ($slideshow->htmlcaptions) {
+                $newcaption->caption = $captions->{"caption".$i}['text'];
+            } else {
+                $newcaption->caption = $captions->{"caption".$i};
+            }
             if (!$newcaption->id = $DB->insert_record('slideshow_captions', $newcaption)) {
                 print_error('Could not insert caption');
             }
@@ -212,16 +212,17 @@
                 </script>';
         } 
     }
-	// Called from $CFG->wwwroot/pluginfile.php
-	// See also test version (mod/slideshow/pluginfile.php) if problems here :-(
-	function slideshow_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
-		$fs = get_file_storage();
-		$relativepath = implode('/', $args);
-		$fullpath = "/$context->id/mod_slideshow/$filearea/$relativepath";
-		if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
-			send_file_not_found();
-		}
-		send_stored_file($file,86400,0,false,$file->get_filename(),false);
-		die;
-	}
+    // Called from $CFG->wwwroot/pluginfile.php
+    // See also test version (mod/slideshow/pluginfile.php) if problems here :-(
+    function slideshow_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
+        $fs = get_file_storage();
+        $relativepath = implode('/', $args);
+        $fullpath = "/$context->id/mod_slideshow/$filearea/$relativepath";
+        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+            send_file_not_found();
+        }
+        //there is a sixth argument passed to send_stored_file, but that function only takes 5 args...
+        send_stored_file($file, 86400, 0, false, (array)$file->get_filename(), false);
+        die;
+    }
 ?>
