@@ -212,17 +212,16 @@
                 </script>';
         } 
     }
-    // Called from $CFG->wwwroot/pluginfile.php
-    // See also test version (mod/slideshow/pluginfile.php) if problems here :-(
-    function slideshow_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
-        $fs = get_file_storage();
-        $relativepath = implode('/', $args);
-        $fullpath = "/$context->id/mod_slideshow/$filearea/$relativepath";
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
-            send_file_not_found();
-        }
-        //there is a sixth argument passed to send_stored_file, but that function only takes 5 args...
-        send_stored_file($file, 86400, 0, false, (array)$file->get_filename(), false);
-        die;
-    }
+	// Called from $CFG->wwwroot/pluginfile.php
+	// See also test version (mod/slideshow/pluginfile.php) if problems here :-(
+	function slideshow_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
+		$fs = get_file_storage();
+		$relativepath = implode('/', $args);
+		$fullpath = "/$context->id/mod_slideshow/$filearea/$relativepath";
+		if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+			send_file_not_found();
+		}
+		send_stored_file($file,86400,0,false,array('filename' => $file->get_filename()),false);
+		die;
+	}
 ?>
