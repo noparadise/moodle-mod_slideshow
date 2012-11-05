@@ -181,6 +181,7 @@
     global $DB;
         $DB->delete_records('slideshow_captions', array('slideshow' => $slideshow->id));
         for ($i=1;$i<$captions->imagenum;$i++) {
+            $newcaption = new object();
             $newcaption->slideshow = $slideshow->id;
             $newcaption->image = $captions->{"image".$i};
             $newcaption->title = $captions->{"title".$i};
