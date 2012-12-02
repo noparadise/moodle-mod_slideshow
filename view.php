@@ -62,7 +62,7 @@
         // check only image files
         if (  preg_match("/\.jpe?g$/", $file_record->filename) || preg_match("/\.gif$/", $file_record->filename) || preg_match("/\.png$/", $file_record->filename)) {
             $showdir = $file_record->filepath;
-            if (preg_match("/^thumb_/", $file_record->filename)) {
+            if (preg_match("/^thumb_?/", $file_record->filename)) {
                 $filename = str_replace('thumb_','',$file_record->filename);
                 $thumbs[$filename] = $filename;
                 continue;
