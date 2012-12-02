@@ -42,33 +42,33 @@
 /// Print the main part of the page
     $img_count = 0;
     if(has_capability('moodle/course:update',$coursecontext)){
-        $conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
-		$file_records =  $DB->get_records('files', $conditions);
-		$captions = array();
-		foreach ($file_records as $filerecord) {
-			$filename = $filerecord->filename;
-			if ( eregi("\.jpe?g$", $filename) || eregi("\.gif$", $filename) || eregi("\.png$", $filename)) {
-				if (eregi("^thumb_", $filename)) {
-					continue;
-				}
-				if (eregi("^resized_", $filename)) {
-					if ($slideshow->keeporiginals) {
+			$conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
+			$file_records =  $DB->get_records('files', $conditions);
+			$captions = array();
+			foreach ($file_records as $filerecord) {
+				$filename = $filerecord->filename;
+				if ( eregi("\.jpe?g$", $filename) || eregi("\.gif$", $filename) || eregi("\.png$", $filename)) {
+					if (eregi("^thumb_?", $filename)) {
 						continue;
-					}else{
-						$filename = str_replace('resized_','',$filename);
 					}
+					if (eregi("^resized_", $filename)) {
+						if ($slideshow->keeporiginals) {
+							continue;
+						}else{
+							$filename = str_replace('resized_','',$filename);
+						}
+					}
+					$image = slideshow_filetidy($filename);
+					$captions[$image] = slideshow_caption_array($slideshow->id,$image);
 				}
-			$image = slideshow_filetidy($filename);
-			$captions[$image] = slideshow_caption_array($slideshow->id,$image);
 			}
-        }
-		sort($captions);
-		require_once('edit_form.php');
-		echo $OUTPUT->heading(get_string('edit_captions','slideshow',''));
-		echo get_string('captiontext','slideshow','');
-		$htmledit = isset($slideshow->htmlcaptions) ? $slideshow->htmlcaptions:0;
-		$mform = new mod_slideshow_edit_form('captions.php', array('captions' => $captions, 'htmledit' => $htmledit, 'context' => $context, 'slideshowid' => $slideshow->id));
-		$mform->display();
+			sort($captions);
+			require_once('edit_form.php');
+			echo $OUTPUT->heading(get_string('edit_captions','slideshow',''));
+			echo get_string('captiontext','slideshow','');
+			$htmledit = isset($slideshow->htmlcaptions) ? $slideshow->htmlcaptions:0;
+			$mform = new mod_slideshow_edit_form('captions.php', array('captions' => $captions, 'htmledit' => $htmledit, 'context' => $context, 'slideshowid' => $slideshow->id));
+			$mform->display();
 	} else {
 		echo get_string('noauth','slideshow','');
 	}	
