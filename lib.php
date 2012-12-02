@@ -195,6 +195,16 @@
             }
         }
     }
+
+		function slideshow_slide_comments_array($slideshowid, $slidenumber) {
+			global $DB;
+			$comments = array();
+			if($comments = $DB->get_records('slideshow_comments', array('slideshowid' => $slideshowid, 'slidenumber' =>  $slidenumber))) {
+				return $comments;
+			} else {
+				return false;
+			}
+		}
     
 		/**
 		 * Write a comment received from comment_form.php into the database.

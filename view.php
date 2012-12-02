@@ -131,9 +131,14 @@
     }
         
     sort($filearray);
+
     if ($slideshow->centred){
-        echo'<div align="center">';
-    }
+			$container_width = $CFG->slideshow_maxwidth + 320;
+			echo '<div style="width: ' . $container_width . 'px; margin: 0px auto;">';
+		}
+
+		echo '<div style="width: ' . $CFG->slideshow_maxwidth . 'px; float: left;">';
+		
     if($img_count) {
         //
         // $slideshow->layout defines thumbnail position - 1 is on top, 2 is bottom
@@ -185,22 +190,22 @@
             // set up regular navigation options (autopoup, image in new window, teacher options)
             $popheight = $CFG->slideshow_maxheight +100;
             $popwidth = $CFG->slideshow_maxwidth +100;
-            echo '<p style="width:50%;text-align:right;"><a target="popup" href="?id='
+            echo '<ul style="text-align:right; list-style: none; margin: 0; width: ' . $CFG->slideshow_maxwidth . 'px"><li><a target="popup" href="?id='
                 .($cm->id)."&autoshow=1\" onclick=\"return openpopup('/mod/slideshow/view.php?id="
                 .($cm->id)."&autoshow=1', 'popup', 'menubar=0,location=0,scrollbars,resizable,width=$popwidth,height=$popheight', 0);\">"
-                .get_string('autopopup','slideshow')."</a>";
+                .get_string('autopopup','slideshow')."</a></li>";
             if(! $CFG->slideshow_securepix){
                 if (isset($slideshow->keeporiginals) and 
                     $DB->record_exists('files', array('contextid'=>$context->id, 'filepath'=>$showdir, 'filename' => $filearray[$img_num]))) {
-                    echo '<br /><a href="'.$baseurl.$filearray[$img_num].'" target="_blank">'.get_string('open_new', 'slideshow').'</a>';
+                    echo '<li><a href="'.$baseurl.$filearray[$img_num].'" target="_blank">'.get_string('open_new', 'slideshow').'</a></li>';
                 } else {
-                    echo '<br /><a href="'.$baseurl.'resized_'.$filearray[$img_num].'" target="_blank">'.get_string('open_new', 'slideshow').'</a>';
+                    echo '<li><a href="'.$baseurl.'resized_'.$filearray[$img_num].'" target="_blank">'.get_string('open_new', 'slideshow').'</a></li>';
                 }
             }
-						echo '<br /><a href="comments.php?id=' . $cm->id . '&img_num=' . $img_num . '">' . get_string('comment_add', 'slideshow') . '</a></p>';
             if (has_capability('moodle/course:update',$context)){
-                echo '<br /><a href="captions.php?id='.$cm->id.'">'.get_string('edit_captions', 'slideshow').'</a></p>';
+                echo '<li><a href="captions.php?id='.$cm->id.'">'.get_string('edit_captions', 'slideshow').'</a></li>';
             }
+						echo '</ul>';
         } else {
             //
             // set up autoplay navigation (< || >)
@@ -218,9 +223,37 @@
         echo '<p>'.get_string('none_found', 'slideshow').' <b>'.$showdir.'</b></p>';
         echo '<p><b>'.$error.'</b></p>';
     }
-    if ($slideshow->centred){
-        echo'</div>';
-    }
+
+		echo'</div>';
+		if($slideshow->centred) {
+			echo '</div>';
+		}
+?>
+
+<div style="float: left; width: 350px; margin: 70px 0 0 20px;">
+	<h3><?php print_string('comments_header', 'slideshow'); ?></h3>
+	<ul style="list-style: none;">
+
+	<?php
+		// Show comments, if there are any.
+		$comments = array();
+		$comments = slideshow_slide_comments_array($slideshow->id, $img_num);
+
+		foreach($comments as $comment) : ?>
+			<?php $user = $DB->get_record('user', array('id' => $comment->userid)); ?>
+			<li>
+				<div>
+					<p><?php echo $user->firstname . ' ' . $user->lastname ?></p>
+					<div style="padding-left: 15px;"><?php echo $comment->slidecomment ?></div>
+				</div>
+			</li>
+		<?php endforeach; ?>
+
+		</ul>
+			<a href="comments.php?id=<?php echo $cm->id ?>&img_num=<?php echo $img_num ?>"><?php print_string('comment_add', 'slideshow') ?></a>
+	</div>
+
+<?php		
 /// Finish the page
     if ($autoshow){
         echo '</body></html>';

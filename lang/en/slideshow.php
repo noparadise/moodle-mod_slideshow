@@ -51,6 +51,7 @@ $string['comment'] = 'Comment';
 $string['comment_insert_error'] = 'There was an error inserting the comment into the database.';
 $string['comment_add'] = 'Add a comment to this slide';
 $string['comment_instructions'] = 'Comments are public and viewable by all.';
+$string['comments_header'] = 'Comments';
  
 // for config.html
 $string['configmaxbytes'] = 'Largest filesize permissible (Kb) before the image is resized and saved';
