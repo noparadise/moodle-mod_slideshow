@@ -196,7 +196,8 @@
                 } else {
                     echo '<br /><a href="'.$baseurl.'resized_'.$filearray[$img_num].'" target="_blank">'.get_string('open_new', 'slideshow').'</a>';
                 }
-            }   
+            }
+						echo '<br /><a href="comments.php?id=' . $cm->id . '&img_num=' . $img_num . '">' . get_string('comment_add', 'slideshow') . '</a></p>';
             if (has_capability('moodle/course:update',$context)){
                 echo '<br /><a href="captions.php?id='.$cm->id.'">'.get_string('edit_captions', 'slideshow').'</a></p>';
             }

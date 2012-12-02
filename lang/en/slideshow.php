@@ -45,6 +45,12 @@ $string['autopopup'] = 'Autoplay in popup';
 $string['caption'] = 'Caption';
 $string['title'] = 'Title';
 $string['noauth'] = 'You do not have permission to edit captions.';
+
+// for comments
+$string['comment'] = 'Comment';
+$string['comment_insert_error'] = 'There was an error inserting the comment into the database.';
+$string['comment_add'] = 'Add a comment to this slide.';
+$string['comment_instructions'] = 'Comments are public and viewable by all.';
  
 // for config.html
 $string['configmaxbytes'] = 'Largest filesize permissible (Kb) before the image is resized and saved';

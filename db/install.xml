@@ -40,6 +40,37 @@
       <INDEXES>
         <INDEX NAME="slideshow" UNIQUE="false" FIELDS="slideshow"/>
       </INDEXES>
+			</TABLE>
+			<TABLE NAME="slideshow_comments" COMMENT="Comments and the slideshow they belong to. Name truncated due to XMLDB editor." PREVIOUS="slideshow" NEXT="slideshow_read_positions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="slideshowid"/>
+        <FIELD NAME="slideshowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="slideshowid" NEXT="slidenumber"/>
+        <FIELD NAME="slidenumber" TYPE="int" LENGTH="3" NOTNULL="true" SEQUENCE="false" PREVIOUS="userid" NEXT="slidecomment"/>
+        <FIELD NAME="slidecomment" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="slidenumber"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="slideshowid"/>
+        <KEY NAME="slideshowid" TYPE="foreign" FIELDS="slideshowid" REFTABLE="slideshow" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="slideshow_read_positions" COMMENT="Users' last read positions for the slideshows. Name truncated by XMLDB editor." PREVIOUS="slideshow_comments" NEXT="slideshow_media">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="slideshowid"/>
+        <FIELD NAME="slideshowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="slideshowid" NEXT="slidenumber"/>
+        <FIELD NAME="slidenumber" TYPE="int" LENGTH="3" NOTNULL="true" SEQUENCE="false" PREVIOUS="userid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="slideshowid"/>
+        <KEY NAME="slideshowid" TYPE="foreign" FIELDS="slideshowid" REFTABLE="slideshow" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
   <STATEMENTS>

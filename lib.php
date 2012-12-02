@@ -195,7 +195,29 @@
             }
         }
     }
+    
+		/**
+		 * Write a comment received from comment_form.php into the database.
+		 */
+    function slideshow_write_comment($commentForm, $slideshow){
+			global $DB;
+			global $USER;
 
+			$newComment = new object();
+			$newComment->slideshowid = $slideshow->id;
+			$newComment->slidenumber = $commentForm->slidenumber;
+			if ($slideshow->htmlcaptions) {
+				$newComment->slidecomment = $commentForm->slidecomment['text'];
+			} else {
+				$newComment->slidecomment = $commentForm->slidecomment;
+			}
+			$newComment->userid = $USER->id;
+
+			if (!$newComment->id = $DB->insert_record('slideshow_comments', $newComment)) {
+				print_error(get_string('slideshow', 'comment_insert_error'));
+			}
+    }
+		
     function slideshow_secure_script ($securitylevel){
         if ($securitylevel){
             echo'<script language=JavaScript>

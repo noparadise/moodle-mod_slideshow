@@ -1,6 +1,6 @@
 <?php
 
-/// This page prints a form to edit captions and titles for the images in the slideshow folder
+/// This page prints a form to edit comments and titles for the images in the slideshow folder
     global $DB;
     require_once("../../config.php");
     require_once("lib.php");
@@ -20,21 +20,21 @@
 
     $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
     require_login($course->id);
-    add_to_log($course->id, "slideshow", "captions", "captions.php?id=$cm->id", "$slideshow->id");
+    add_to_log($course->id, "slideshow", "comments", "comments.php?id=$cm->id", "$slideshow->id");
 
     $form = data_submitted();
-	if ($form) {
-		if (isset($form->cancel)) {
-			redirect("view.php?id=$id");
+		if ($form) {
+			if (isset($form->cancel)) {
+				redirect("view.php?id=$id");
+				die;
+			}
+			slideshow_write_comment($form, $slideshow);
+			redirect("view.php?id=$id&img_num=$form->slidenumber");
 			die;
-		}
-		slideshow_write_captions($form,$slideshow);
-        redirect("view.php?id=$id");
-		die;
     }
-    add_to_log($course->id, "slideshow", "captions", "captions.php?id=$cm->id", "$slideshow->id");
+    add_to_log($course->id, "slideshow", "comments", "comments.php?id=$cm->id", "$slideshow->id");
 /// Print header.
-    $PAGE->set_url('/mod/slideshow/captions.php',array('id' => $cm->id));
+    $PAGE->set_url('/mod/slideshow/comments.php',array('id' => $cm->id));
     $PAGE->navbar->add($slideshow->name);
     echo $OUTPUT->header();
     $coursecontext = get_context_instance(CONTEXT_COURSE, $course->id, MUST_EXIST);
@@ -63,11 +63,13 @@
 				}
 			}
 			sort($captions);
+
+			// Display the actual form.
 			require_once('edit_form.php');
-			echo $OUTPUT->heading(get_string('edit_captions','slideshow',''));
-			echo get_string('captiontext','slideshow','');
+			echo $OUTPUT->heading(get_string('comment_add', 'slideshow'));
+			echo get_string('comment_instructions', 'slideshow');
 			$htmledit = isset($slideshow->htmlcaptions) ? $slideshow->htmlcaptions:0;
-			$mform = new mod_slideshow_edit_form('captions.php', array('captions' => $captions, 'htmledit' => $htmledit, 'context' => $context, 'slideshowid' => $slideshow->id));
+			$mform = new mod_slideshow_comment_form('comments.php', array('htmledit' => $htmledit, 'context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num));
 			$mform->display();
 	} else {
 		echo get_string('noauth','slideshow','');
