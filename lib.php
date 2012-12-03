@@ -150,7 +150,7 @@
             } else {
                 $bstyle = 'border:2px solid white';
             }
-            echo "<a href=\"?id=".($cm->id).'&img_num='.$this_img.'">'; 
+            echo "<a href=\"?id=".($cm->id).'&img_num='.$this_img.'&lr=0">'; 
             echo '<img src="'.$baseurl.'thumb_'.$filename.'" alt="'.$filename.'" title="'.$filename.'" style="'.$bstyle.'">';
             echo '</a> ';
             $this_img++;
@@ -227,6 +227,27 @@
 				print_error(get_string('slideshow', 'comment_insert_error'));
 			}
     }
+
+		/**
+		 * Inserts or updates a record containing the last slide viewed by a given $user.
+		 * $lastreadconditions contains the user id and slideshow id, for finding the correct
+		 * record.
+		 */
+		function slideshow_save_last_position($slideshow, $user, $slidenumber, $lastreadconditions) {
+			global $DB;
+
+			$lastRead = new object();
+			$lastRead->slideshowid = $slideshow->id;
+			$lastRead->userid = $user->id;
+			$lastRead->slidenumber = $slidenumber;
+
+			if($DB->record_exists('slideshow_read_positions', $lastreadconditions)) {
+				$lastRead->id = $DB->get_record('slideshow_read_positions', $lastreadconditions)->id;
+				$DB->update_record('slideshow_read_positions', $lastRead);
+			} else {
+				$DB->insert_record('slideshow_read_positions', $lastRead);
+			}
+		}
 		
     function slideshow_secure_script ($securitylevel){
         if ($securitylevel){

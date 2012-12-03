@@ -1,6 +1,7 @@
 <?php  
 /// This page prints a particular instance of slideshow
     global $DB;
+		global $USER;
     require_once("../../config.php");
     require_once("lib.php");
 
@@ -10,6 +11,9 @@
     $img_num = optional_param('img_num',0,PARAM_INT);
     $recompress = optional_param('recompress',0,PARAM_INT);
     $pause = optional_param('pause',0,PARAM_INT);
+		// Value of 0 overrides the last read position in case the first slide is specifically
+		// requested (i.e. clicking through the last slide or on the first thumbnail).
+		$lr = optional_param('lr', 1, PARAM_INT);
 
     if ($a) {  // Two ways to specify the module
         $slideshow = $DB->get_record('slideshow', array('id'=>$a), '*', MUST_EXIST);
@@ -24,10 +28,23 @@
 
     require_course_login($course, true, $cm);
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+		// If a last read record exists it will match these conditions.
+		$lastreadconditions = array('userid' => $USER->id, 'slideshowid' => $slideshow->id);
+
     if ($img_num == 0) {    // qualifies add_to_log, otherwise every slide view increments log
         add_to_log($course->id, "slideshow", "view", "view.php?id=$cm->id", "$slideshow->id");
-    }
-    
+				
+				// If a last read position exists load it.
+				if($lr && $DB->record_exists('slideshow_read_positions', $lastreadconditions)) {
+					$img_num = $DB->get_record('slideshow_read_positions', $lastreadconditions)->slidenumber;
+				} else {
+					// User specifically requested first slide, save as last position.
+					slideshow_save_last_position($slideshow, $USER, $img_num, $lastreadconditions);
+				}
+		} else {
+			slideshow_save_last_position($slideshow, $USER, $img_num, $lastreadconditions);
+		}
 
 /// Print header.
     $PAGE->set_url('/mod/slideshow/view.php',array('id' => $cm->id));    
@@ -171,7 +188,8 @@
             echo '<table cellpadding="5"><tr><td valign="top">';
         }
         // display main picture, with link to next page and plain text for alt and title tags
-        echo '<a name="pic" href="?id='.($cm->id).'&img_num='.fmod($img_num+1,$img_count).'&autoshow='.$autoshow.'">';
+				// The lr parameter overrides the last read position, in case the user reaches the end of the slideshow and wants to see the first slide.
+        echo '<a name="pic" href="?id='.($cm->id).'&img_num='.fmod($img_num+1,$img_count).'&autoshow='.$autoshow.'&lr=0">';
         echo '<img src="'.$baseurl.'resized_'.$filearray[$img_num].'" alt="'.$filearray[$img_num]
             .'" title="'.$filearray[$img_num].'">';
         echo "</a><br />";
