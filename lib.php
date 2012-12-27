@@ -285,6 +285,7 @@
 		// TODO fix mixed format slides (e.g. slide 1 is png, slide 2 jpg).
 		function slideshow_get_thumbnail_path($context) {
 			global $DB;
+			global $CFG;
 
 			$conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
 			$file_records =  $DB->get_records('files', $conditions);
