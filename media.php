@@ -52,17 +52,17 @@
 
 		// Print the main part of the page
     $img_count = 0;
-    if(has_capability('moodle/course:update',$coursecontext)){
+		if(has_capability('moodle/course:update',$coursecontext)){
 			$conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
 			$file_records =  $DB->get_records('files', $conditions);
 			$captions = array();
 			foreach ($file_records as $filerecord) {
 				$filename = $filerecord->filename;
-				if ( eregi("\.jpe?g$", $filename) || eregi("\.gif$", $filename) || eregi("\.png$", $filename)) {
-					if (eregi("^thumb_?", $filename)) {
+				if ( preg_match("#\.jpe?g$#", $filename) || preg_match("#\.gif$#", $filename) || preg_match("#\.png$#", $filename)) {
+					if (preg_match("#^thumb_?#", $filename)) {
 						continue;
 					}
-					if (eregi("^resized_", $filename)) {
+					if (preg_match("#^resized_#", $filename)) {
 						if ($slideshow->keeporiginals) {
 							continue;
 						}else{
@@ -74,7 +74,7 @@
 				}
 			}
 			sort($captions);
-
+    
 			// Display the actual form.
 			require_once('edit_form.php');
 			echo $OUTPUT->heading(get_string('comment_add', 'slideshow'));
