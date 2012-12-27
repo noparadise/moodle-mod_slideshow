@@ -181,19 +181,28 @@
         if($titlestring){
             echo format_text('<h1>'.$titlestring.'</h1>');
         }
-        echo '<p style="margin-left : 5px">';
         if ($slideshow->filename == 1){
             echo '<p>'.$captionstring.'<p>';
         } else if ($slideshow->filename == 3){
             echo '<table cellpadding="5"><tr><td valign="top">';
-        }
+				}
+
         // display main picture, with link to next page and plain text for alt and title tags
+				echo "<div id=\"slide\" style=\"position: absolute; z-index: 10; width: $CFG->slideshow_maxwidth; height: $CFG->slideshow_maxheight;\">";
 				// The lr parameter overrides the last read position, in case the user reaches the end of the slideshow and wants to see the first slide.
         echo '<a name="pic" href="?id='.($cm->id).'&img_num='.fmod($img_num+1,$img_count).'&autoshow='.$autoshow.'&lr=0">';
         echo '<img src="'.$baseurl.'resized_'.$filearray[$img_num].'" alt="'.$filearray[$img_num]
-            .'" title="'.$filearray[$img_num].'">';
-        echo "</a><br />";
-        if ($slideshow->filename == 2){
+            .'" title="'.$filearray[$img_num].'" style="z-index: 1">';
+        echo "</a><br /></div>";
+ 
+				// If there is media on this slide overlay it over the slide.
+				echo '<div id="media_wrapper" style="position: absolute; z-index: 1000">';
+				echo '<div id="media" style="position: relative; top: 50px; left: 50px">';
+				echo $PAGE->get_renderer('core', 'media')->embed_url(new moodle_url('http://www.youtube.com/watch?v=9dvDlCZpeEo'));
+				echo '</div>';
+				echo '</div>';
+
+       if ($slideshow->filename == 2){
             echo '<p>'.$captionstring.'<p>';
         } else if ($slideshow->filename == 3){
             echo '</td><td valign="top"><p>'.$captionstring.'</td></tr></table>';
@@ -208,7 +217,8 @@
             // set up regular navigation options (autopoup, image in new window, teacher options)
             $popheight = $CFG->slideshow_maxheight +100;
             $popwidth = $CFG->slideshow_maxwidth +100;
-            echo '<ul style="text-align:right; list-style: none; margin: 0; width: ' . $CFG->slideshow_maxwidth . 'px"><li><a target="popup" href="?id='
+						// Set a fixed top margin because media wrapper is absolute, need to display navigation options underneath it.
+            echo '<ul style="text-align:right; list-style: none; margin: 500px 0 0 0; width: ' . $CFG->slideshow_maxwidth . 'px"><li><a target="popup" href="?id='
                 .($cm->id)."&autoshow=1\" onclick=\"return openpopup('/mod/slideshow/view.php?id="
                 .($cm->id)."&autoshow=1', 'popup', 'menubar=0,location=0,scrollbars,resizable,width=$popwidth,height=$popheight', 0);\">"
                 .get_string('autopopup','slideshow')."</a></li>";
