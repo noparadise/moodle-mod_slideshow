@@ -1,7 +1,8 @@
 <?php
 
-/// This page prints a form to edit comments and titles for the images in the slideshow folder
+/// This page prints a form to edit media and titles for the images in the slideshow folder
     global $DB;
+		global $PAGE;
     require_once("../../config.php");
     require_once("lib.php");
 
@@ -20,7 +21,7 @@
 
     $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
     require_login($course->id);
-    add_to_log($course->id, "slideshow", "comments", "comments.php?id=$cm->id", "$slideshow->id");
+    add_to_log($course->id, "slideshow", "media", "media.php?id=$cm->id", "$slideshow->id");
 
     $form = data_submitted();
 		if ($form) {
@@ -32,14 +33,24 @@
 			redirect("view.php?id=$id&img_num=$form->slidenumber");
 			die;
     }
-    add_to_log($course->id, "slideshow", "comments", "comments.php?id=$cm->id", "$slideshow->id");
-/// Print header.
-    $PAGE->set_url('/mod/slideshow/comments.php',array('id' => $cm->id));
+    add_to_log($course->id, "slideshow", "media", "media.php?id=$cm->id", "$slideshow->id");
+		// Print header.
+    $PAGE->set_url('/mod/slideshow/media.php',array('id' => $cm->id));
     $PAGE->navbar->add($slideshow->name);
     echo $OUTPUT->header();
     $coursecontext = get_context_instance(CONTEXT_COURSE, $course->id, MUST_EXIST);
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-/// Print the main part of the page
+		
+		// Javascript to allow positioning of media on slide.
+		//$PAGE->requires->js_init_call('M.local_slideshow.init'); 
+		$jsmodule = array(
+                'name' => 'mod_slideshow',
+                'fullpath' => '/mod/slideshow/module.js',
+                'requires' => array());
+   $PAGE->requires->js_init_call('M.local_slideshow.init',
+                 null, false, $jsmodule);
+
+		// Print the main part of the page
     $img_count = 0;
     if(has_capability('moodle/course:update',$coursecontext)){
 			$conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
@@ -69,7 +80,7 @@
 			echo $OUTPUT->heading(get_string('comment_add', 'slideshow'));
 			echo get_string('comment_instructions', 'slideshow');
 			$htmledit = isset($slideshow->htmlcaptions) ? $slideshow->htmlcaptions:0;
-			$mform = new mod_slideshow_comment_form('comments.php', array('htmledit' => $htmledit, 'context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num));
+			$mform = new mod_slideshow_media_form('media.php', array('htmledit' => $htmledit, 'context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num));
 			$mform->display();
 	} else {
 		echo get_string('noauth','slideshow','');
