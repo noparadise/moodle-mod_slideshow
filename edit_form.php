@@ -10,28 +10,31 @@ class mod_slideshow_edit_form extends moodleform {
         $context = $this->_customdata['context'];
         $slideshowid = $this->_customdata['slideshowid'];
         
-        $thumburl = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_slideshow/content/0/slideshow'.$slideshowid.'/thumb_';
         
-		$imagenum = 1;
-		foreach ($captions as $caption) {
-			$mform->addElement('header', 'header', '<img src="'.$thumburl.$caption['image'].'.jpg"> ('.$caption['image'].'.jpg)');
-			$mform->addElement('text', 'title'.$imagenum, get_string('title', 'slideshow',$caption['image']));
-			$mform->setType('title'.$imagenum, PARAM_RAW);
-			$mform->setDefault('title'.$imagenum, $caption['title']);
-			if ($htmledit) {
-				$mform->addElement('editor', 'caption'.$imagenum,get_string('caption', 'slideshow',$caption['image']));
-				$mform->setType('caption'.$imagenum, PARAM_RAW);
-				$mform->setDefault('caption'.$imagenum, array('text' => $caption['caption']));
-			} else {
-				$mform->addElement('textarea', 'caption'.$imagenum,get_string('caption', 'slideshow',$caption['image']));
-				$mform->setType('caption'.$imagenum, PARAM_RAW);
-				$mform->setDefault('caption'.$imagenum, $caption['caption']);
-			}
-			$mform->addElement('hidden', 'image'.$imagenum);
-			$mform->setType('image'.$imagenum, PARAM_RAW);
-			$mform->setDefault('image'.$imagenum, $caption['image']);
-			$imagenum++;
-		}
+				$imagenum = 1;
+				$thumbnail_path = slideshow_get_thumbnail_path($context);
+				// Need to trim 'img' from end of base path, as $caption["image"] contains imgX where X is the number of the slide.
+				$thumbnail_path["base"] = substr($thumbnail_path["base"], 0, -3);
+				
+				foreach ($captions as $caption) {
+					$mform->addElement('header', 'header', '<img src="'.$thumbnail_path["base"].$caption["image"].'.'.$thumbnail_path["extension"].'"> ('.$caption['image'].'.'.$thumbnail_path["extension"].')');
+					$mform->addElement('text', 'title'.$imagenum, get_string('title', 'slideshow',$caption['image']));
+					$mform->setType('title'.$imagenum, PARAM_RAW);
+					$mform->setDefault('title'.$imagenum, $caption['title']);
+					if ($htmledit) {
+						$mform->addElement('editor', 'caption'.$imagenum,get_string('caption', 'slideshow',$caption['image']));
+						$mform->setType('caption'.$imagenum, PARAM_RAW);
+						$mform->setDefault('caption'.$imagenum, array('text' => $caption['caption']));
+					} else {
+						$mform->addElement('textarea', 'caption'.$imagenum,get_string('caption', 'slideshow',$caption['image']));
+						$mform->setType('caption'.$imagenum, PARAM_RAW);
+						$mform->setDefault('caption'.$imagenum, $caption['caption']);
+					}
+					$mform->addElement('hidden', 'image'.$imagenum);
+					$mform->setType('image'.$imagenum, PARAM_RAW);
+					$mform->setDefault('image'.$imagenum, $caption['image']);
+					$imagenum++;
+				}
         $mform->addElement('hidden', 'imagenum');
         $mform->setType('imagenum', PARAM_RAW);
         $mform->setDefault('imagenum', $imagenum);
@@ -44,7 +47,6 @@ class mod_slideshow_edit_form extends moodleform {
 class mod_slideshow_comment_form extends moodleform {
     function definition() {
 			global $CFG;
-			global $DB;
 			
 			$mform = $this->_form;
 			$htmledit = $this->_customdata['htmledit'];
@@ -52,21 +54,9 @@ class mod_slideshow_comment_form extends moodleform {
 			$slideshowid = $this->_customdata['slideshowid'];
 			$slidenumber = $this->_customdata['slidenumber'];
 
-			// Generate correct path to images
-			$conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
-			$file_records =  $DB->get_records('files', $conditions);
-			foreach ($file_records as $file_record) {
-					// check only image files
-					if (  preg_match("/\.jpe?g$/", $file_record->filename) || preg_match("/\.gif$/", $file_record->filename) || preg_match("/\.png$/", $file_record->filename)) {
-							$showdir = $file_record->filepath;
-							$extension = pathinfo($file_record->filename, PATHINFO_EXTENSION);
-					}
-			}
-			$urlroot = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_slideshow/content/0';
-			$baseurl = $urlroot.$showdir;
-			$thumburl = $baseurl . 'thumb_img';
-        
-			$mform->addElement('header', 'header', '<img src="'.$thumburl.$slidenumber.'.'.$extension.'"> ('.$slidenumber.'.'.$extension.')');
+			$thumbnail_path = slideshow_get_thumbnail_path($context);
+		        
+			$mform->addElement('header', 'header', '<img src="'.$thumbnail_path["base"].$slidenumber.'.'.$thumbnail_path["extension"].'"> ('.$slidenumber.'.'.$thumbnail_path["extension"].')');
 			if ($htmledit) {
 				$mform->addElement('editor', 'slidecomment', get_string('comment', 'slideshow'));
 				$mform->setType('comment', PARAM_RAW);

@@ -278,4 +278,29 @@
 		send_stored_file($file,86400,0,false,array('filename' => $file->get_filename()),false);
 		die;
 	}
+
+		// Returns array with base path to thumbnails (excluding slide number) in first position
+		// and extension in second position. To display an image concatenate array["base"],
+		// slidenumber and array["extension"].
+		// TODO fix mixed format slides (e.g. slide 1 is png, slide 2 jpg).
+		function slideshow_get_thumbnail_path($context) {
+			global $DB;
+
+			$conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
+			$file_records =  $DB->get_records('files', $conditions);
+
+			foreach ($file_records as $file_record) {
+					// check only image files
+					if (  preg_match("/\.jpe?g$/", $file_record->filename) || preg_match("/\.gif$/", $file_record->filename) || preg_match("/\.png$/", $file_record->filename)) {
+							$showdir = $file_record->filepath;
+							$extension = pathinfo($file_record->filename, PATHINFO_EXTENSION);
+					}
+			}
+
+			$urlroot = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_slideshow/content/0';
+			$baseurl = $urlroot.$showdir;
+			$thumburl = $baseurl . 'thumb_img';
+        
+			return array("base" => $thumburl, "extension" => $extension);
+		}
 ?>
