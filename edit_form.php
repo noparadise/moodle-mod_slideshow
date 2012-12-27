@@ -44,16 +44,29 @@ class mod_slideshow_edit_form extends moodleform {
 class mod_slideshow_comment_form extends moodleform {
     function definition() {
 			global $CFG;
+			global $DB;
 			
 			$mform = $this->_form;
 			$htmledit = $this->_customdata['htmledit'];
 			$context = $this->_customdata['context'];
 			$slideshowid = $this->_customdata['slideshowid'];
 			$slidenumber = $this->_customdata['slidenumber'];
-			
-			$thumburl = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_slideshow/content/0/slideshow'.$slideshowid.'/thumb_';
+
+			// Generate correct path to images
+			$conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
+			$file_records =  $DB->get_records('files', $conditions);
+			foreach ($file_records as $file_record) {
+					// check only image files
+					if (  preg_match("/\.jpe?g$/", $file_record->filename) || preg_match("/\.gif$/", $file_record->filename) || preg_match("/\.png$/", $file_record->filename)) {
+							$showdir = $file_record->filepath;
+							$extension = pathinfo($file_record->filename, PATHINFO_EXTENSION);
+					}
+			}
+			$urlroot = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_slideshow/content/0';
+			$baseurl = $urlroot.$showdir;
+			$thumburl = $baseurl . 'thumb_img';
         
-			$mform->addElement('header', 'header', '<img src="'.$thumburl.$slidenumber.'.jpg"> ('.$slidenumber.'.jpg)');
+			$mform->addElement('header', 'header', '<img src="'.$thumburl.$slidenumber.'.'.$extension.'"> ('.$slidenumber.'.'.$extension.')');
 			if ($htmledit) {
 				$mform->addElement('editor', 'slidecomment', get_string('comment', 'slideshow'));
 				$mform->setType('comment', PARAM_RAW);
