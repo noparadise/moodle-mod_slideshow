@@ -13,7 +13,9 @@ M.local_slideshow = {
 			this.slideRight = slideRegion.right;
 			this.slideBottom = slideRegion.bottom;
 			this.slideLeft = slideRegion.left;
-			console.log("Regions top-left coords are: " + this.slideTop + ", " + this.slideLeft);
+
+			var mediaOutline = this.Y.one("#media_outline");
+			mediaOutline.plug(this.Y.Plugin.Drag);
 
 			this.slide.on("click", this.getMediaCoords);
     },
@@ -22,7 +24,6 @@ M.local_slideshow = {
 			var mY = e.pageY;
 			var relativeMX = mX - M.local_slideshow.slide.get("region").left;
 			var relativeMY = mY - M.local_slideshow.slide.get("region").top;
-			console.log("Clicked relative coords: " + relativeMY + ", " + relativeMX);
 			M.local_slideshow.Y.one("#id_mediaX").set("value", relativeMX);
 			M.local_slideshow.Y.one("#id_mediaY").set("value", relativeMY);
 		},

@@ -97,7 +97,7 @@ class mod_slideshow_media_form extends moodleform {
 
 			$slide_width = $CFG->slideshow_maxwidth;
 			$slide_height = $CFG->slideshow_maxheight;
-			$img_html = '<img id="slide" src="'.$thumbnail_path["base"].$slidenumber.'.'.$thumbnail_path["extension"].'" width="' . $slide_width . '" height="' . $slide_height . '" />';
+			$img_html = '<div id="slide" style="background-image: url(\''.$thumbnail_path["base"].$slidenumber.'.'.$thumbnail_path["extension"].'\'); width: ' . $slide_width . 'px; height:' . $slide_height . 'px;"><span id="media_outline" style="border: 1px solid #000; padding: 20px; margin-top: 20px; display: block; width: 50px; height: 50px; background: #B5D045; cursor: hand; cursor: pointer;">Drag me</span></div>';
 			$mform->addElement('html', $img_html); 
 
 			$mform->addElement('text', 'mediaX', 'Media X position');

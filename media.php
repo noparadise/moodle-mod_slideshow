@@ -42,11 +42,10 @@
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 		
 		// Javascript to allow positioning of media on slide.
-		//$PAGE->requires->js_init_call('M.local_slideshow.init'); 
 		$jsmodule = array(
                 'name' => 'mod_slideshow',
                 'fullpath' => '/mod/slideshow/module.js',
-                'requires' => array("node", "datatype-number"));
+                'requires' => array("node", "dd-plugin"));
    $PAGE->requires->js_init_call('M.local_slideshow.init',
                  null, false, $jsmodule);
 
