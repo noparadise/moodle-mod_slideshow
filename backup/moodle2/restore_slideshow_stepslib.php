@@ -35,6 +35,7 @@ class restore_slideshow_activity_structure_step extends restore_activity_structu
         $paths = array();
         $paths[] = new restore_path_element('slideshow', '/activity/slideshow');
         $paths[] = new restore_path_element('slideshow_caption', '/activity/slideshow/captions/caption');
+				$paths[] = new restore_path_element('slideshow_comment', '/activity/slideshow/comments/comment');
 
         // Return the paths wrapped into standard activity structure
         return $this->prepare_activity_structure($paths);
@@ -64,6 +65,18 @@ class restore_slideshow_activity_structure_step extends restore_activity_structu
 
         $newitemid = $DB->insert_record('slideshow_captions', $data);
         $this->set_mapping('slideshow_caption', $oldid, $newitemid);
+    }
+
+	protected function process_slideshow_comment($data) {
+        global $DB;
+
+        $data = (object)$data;
+        $oldid = $data->id;
+
+        $data->slideshow = $this->get_new_parentid('slideshow');
+
+        $newitemid = $DB->insert_record('slideshow_comments', $data);
+        $this->set_mapping('slideshow_comment', $oldid, $newitemid);
     }
 
 
