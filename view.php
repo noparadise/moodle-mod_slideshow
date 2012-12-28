@@ -77,14 +77,14 @@
     $showdir = '/';
     foreach ($file_records as $file_record) {
         // check only image files
-        if (  preg_match("/\.jpe?g$/", $file_record->filename) || preg_match("/\.gif$/", $file_record->filename) || preg_match("/\.png$/", $file_record->filename)) {
+        if (  preg_match("/\.jpe?g$/i", $file_record->filename) || preg_match("/\.gif$/i", $file_record->filename) || preg_match("/\.png$/i", $file_record->filename)) {
             $showdir = $file_record->filepath;
-            if (preg_match("/^thumb_?/", $file_record->filename)) {
+            if (preg_match("/^thumb_?/i", $file_record->filename)) {
                 $filename = str_replace('thumb_','',$file_record->filename);
                 $thumbs[$filename] = $filename;
                 continue;
             }
-            if (preg_match("/^resized_/", $file_record->filename)) {
+            if (preg_match("/^resized_/i", $file_record->filename)) {
                 $filename = str_replace('resized_','',$file_record->filename);
                 $resized[$filename] = $filename;
                 continue;
