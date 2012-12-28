@@ -29,7 +29,7 @@
 				redirect("view.php?id=$id");
 				die;
 			}
-			if($form->mediadelete) {
+			if(isset($form->mediadelete) && $form->mediadelete) {
 				if($media = slideshow_slide_get_media($form->slideshowid, $form->slidenumber)) {
 					if(! $DB->delete_records("slideshow_media", array('slideshowid' => $form->slideshowid, 'slidenumber' => $form->slidenumber))) {
 						print_error("Error deleting media.");
