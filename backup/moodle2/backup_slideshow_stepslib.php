@@ -51,6 +51,8 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
 		$read_positions = new backup_nested_element('read_positions');
 		$read_position = new backup_nested_element('read_position', array('id'), array('slideshowid', 'userid', 'slidenumber'));
 
+		$media = new backup_nested_element('media');
+		$media_entry = new backup_nested_element('media_entry', array('id'), array('slideshowid', 'slidenumber', 'url', 'width', 'height', 'x', 'y'));
 
 		// Build the tree
 
@@ -62,6 +64,9 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
 
 				$slideshow->add_child($read_positions);
 				$read_positions->add_child($read_position);
+
+				$slideshow->add_child($media);
+				$media->add_child($media_entry);
 
         // Define sources
         $slideshow->set_source_table('slideshow', array('id' => backup::VAR_ACTIVITYID));
@@ -78,6 +83,11 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
 				$read_position->set_source_sql("
 						SELECT *
 							FROM {slideshow_read_positions}
+						WHERE slideshowid = ? ",
+						array(backup::VAR_PARENTID));
+				$media_entry->set_source_sql("
+						SELECT *
+							FROM {slideshow_media}
 						WHERE slideshowid = ? ",
 						array(backup::VAR_PARENTID));
 
