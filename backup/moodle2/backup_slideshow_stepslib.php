@@ -48,6 +48,10 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
 		$comments = new backup_nested_element('comments');
 		$comment = new backup_nested_element('comment', array('id'), array('slideshowid', 'userid', 'slidenumber', 'slidecomment'));
 
+		$read_positions = new backup_nested_element('read_positions');
+		$read_position = new backup_nested_element('read_position', array('id'), array('slideshowid', 'userid', 'slidenumber'));
+
+
 		// Build the tree
 
         $slideshow->add_child($captions);
@@ -55,6 +59,9 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
 
 				$slideshow->add_child($comments);
 				$comments->add_child($comment);
+
+				$slideshow->add_child($read_positions);
+				$read_positions->add_child($read_position);
 
         // Define sources
         $slideshow->set_source_table('slideshow', array('id' => backup::VAR_ACTIVITYID));
@@ -66,6 +73,11 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
 				$comment->set_source_sql("
 						SELECT *
 							FROM {slideshow_comments}
+						WHERE slideshowid = ? ",
+						array(backup::VAR_PARENTID));
+				$read_position->set_source_sql("
+						SELECT *
+							FROM {slideshow_read_positions}
 						WHERE slideshowid = ? ",
 						array(backup::VAR_PARENTID));
 
