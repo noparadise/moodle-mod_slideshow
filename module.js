@@ -14,16 +14,24 @@ M.local_slideshow = {
 			this.slideBottom = slideRegion.bottom;
 			this.slideLeft = slideRegion.left;
 
-			var mediaOutline = this.Y.one("#media_outline");
-			mediaOutline.plug(this.Y.Plugin.Drag);
+			this.mediaOutline = this.Y.one("#media_outline");
+			this.mediaOutline.plug(this.Y.Plugin.Drag);
+			
+			// Set the outline box to the correct position.
+			var x = parseInt(this.Y.one("#id_mediaX").get("value"), 10);
+			var y = parseInt(this.Y.one("#id_mediaY").get("value"), 10);
+			if(x) {
+				// Absolute coordinates, have to add slide's start coords.
+				this.mediaOutline.setXY([this.slideLeft + x, this.slideTop + y]);
+			}
 
 			this.slide.on("click", this.getMediaCoords);
     },
 		getMediaCoords : function(e) {
-			var mX = e.pageX;
-			var mY = e.pageY;
-			var relativeMX = mX - M.local_slideshow.slide.get("region").left;
-			var relativeMY = mY - M.local_slideshow.slide.get("region").top;
+			var x = M.local_slideshow.mediaOutline.getX();
+			var y = M.local_slideshow.mediaOutline.getY();
+			var relativeMX = x - M.local_slideshow.slide.get("region").left;
+			var relativeMY = y - M.local_slideshow.slide.get("region").top;
 			M.local_slideshow.Y.one("#id_mediaX").set("value", relativeMX);
 			M.local_slideshow.Y.one("#id_mediaY").set("value", relativeMY);
 		},

@@ -88,6 +88,7 @@ class mod_slideshow_media_form extends moodleform {
 			$context = $this->_customdata['context'];
 			$slideshowid = $this->_customdata['slideshowid'];
 			$slidenumber = $this->_customdata['slidenumber'];
+			$media = $this->_customdata['media'];
 
 			$thumbnail_path = slideshow_get_thumbnail_path($context);
 			// FIXME Naïve way to get path to the full-size slide.
@@ -100,11 +101,29 @@ class mod_slideshow_media_form extends moodleform {
 			$img_html = '<div id="slide" style="background-image: url(\''.$thumbnail_path["base"].$slidenumber.'.'.$thumbnail_path["extension"].'\'); width: ' . $slide_width . 'px; height:' . $slide_height . 'px;"><span id="media_outline" style="border: 1px solid #000; padding: 20px; margin-top: 20px; display: block; width: 50px; height: 50px; background: #B5D045; cursor: hand; cursor: pointer;">Drag me</span></div>';
 			$mform->addElement('html', $img_html); 
 
+
+			$mform->addElement('text', 'mediaurl', 'URL for media:');
+			$mform->setType('mediaurl', PARAM_TEXT);
+
 			$mform->addElement('text', 'mediaX', 'Media X position');
 			$mform->setType('mediaX', PARAM_INT);
 
 			$mform->addElement('text', 'mediaY', 'Media Y position');
 			$mform->setType('mediaY', PARAM_INT);
+
+			$mform->addElement('text', 'mediawidth', 'Media width');
+			$mform->setType('mediawidth', PARAM_INT);
+			
+			$mform->addElement('text', 'mediaheight', 'Media height');
+			$mform->setType('mediaheight', PARAM_INT);
+
+			if($media) {
+				$mform->setDefault('mediaurl', $media->url);
+				$mform->setDefault('mediaX', $media->x);
+				$mform->setDefault('mediaY', $media->y);
+				$mform->setDefault('mediawidth', $media->width);
+				$mform->setDefault('mediaheight', $media->height);
+			}
 
 			$mform->addElement('hidden', 'slideshowid', $slideshowid);
 			$mform->setType('slideshowid', PARAM_RAW);

@@ -207,7 +207,7 @@
 		}
     
 		/**
-		 * Write a comment received from comment_form.php into the database.
+		 * Write a comment into the database.
 		 */
     function slideshow_write_comment($commentForm, $slideshow){
 			global $DB;
@@ -227,6 +227,52 @@
 				print_error(get_string('slideshow', 'comment_insert_error'));
 			}
     }
+
+		function slideshow_slide_get_media($slideshowid, $slidenumber) {
+			global $DB;
+			$media = array();
+			if($media = $DB->get_record('slideshow_media', array('slideshowid' => $slideshowid, 'slidenumber' =>  $slidenumber))) {
+				return $media;
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Write media settings into the database.
+		 */
+    function slideshow_write_media($mediaForm, $slideshow){
+			global $DB;
+			global $USER;
+
+			$newMedia = new object();
+			$newMedia->slideshowid = $slideshow->id;
+			$newMedia->slidenumber = $mediaForm->slidenumber;
+			$newMedia->url = $mediaForm->mediaurl;
+			$newMedia->width = $mediaForm->mediawidth;
+			$newMedia->height = $mediaForm->mediaheight;
+			$newMedia->x = $mediaForm->mediaX;
+			$newMedia->y = $mediaForm->mediaY;
+			$newMedia->userid = $USER->id;
+
+
+			// Conditions to select an existing media entry for a given slideshow and slide number.
+			$mediaconditions = array("slideshowid" => $slideshow->id, "slidenumber" => $mediaForm->slidenumber);
+
+			// A media entry already exists, update it instead of adding a new one.
+			if($DB->record_exists('slideshow_media', $mediaconditions)) {
+				$newMedia->id = $DB->get_record('slideshow_media', $mediaconditions)->id;
+				if(!$newMedia->id = $DB->update_record('slideshow_media', $newMedia)) {
+					print_error("Error updating media.");
+				}
+			// There wasn't a media entry: create it.
+			} else {
+				if(!$newMedia->id = $DB->insert_record('slideshow_media', $newMedia)) {
+					print_error("Error adding media.");
+				}
+			}	
+    }
+
 
 		/**
 		 * Inserts or updates a record containing the last slide viewed by a given $user.

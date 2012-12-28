@@ -196,11 +196,15 @@
         echo "</a><br /></div>";
  
 				// If there is media on this slide overlay it over the slide.
-				echo '<div id="media_wrapper" style="position: absolute; z-index: 1000">';
-				echo '<div id="media" style="position: relative; top: 50px; left: 50px">';
-				echo $PAGE->get_renderer('core', 'media')->embed_url(new moodle_url('http://www.youtube.com/watch?v=9dvDlCZpeEo'));
-				echo '</div>';
-				echo '</div>';
+				if($media = slideshow_slide_get_media($slideshow->id, $img_num)) {
+					$top = $media->y;
+					$left = $media->x;
+					echo '<div id="media_wrapper" style="position: absolute; z-index: 1000">';
+					echo '<div id="media" style="position: relative; top: ' . $top . 'px; left: ' . $left . 'px">';
+					echo $PAGE->get_renderer('core', 'media')->embed_url(new moodle_url('http://www.youtube.com/watch?v=9dvDlCZpeEo'));
+					echo '</div>';
+					echo '</div>';
+				}
 
        if ($slideshow->filename == 2){
             echo '<p>'.$captionstring.'<p>';

@@ -29,7 +29,7 @@
 				redirect("view.php?id=$id");
 				die;
 			}
-			slideshow_write_comment($form, $slideshow);
+			slideshow_write_media($form, $slideshow);
 			redirect("view.php?id=$id&img_num=$form->slidenumber");
 			die;
     }
@@ -78,8 +78,8 @@
 			require_once('edit_form.php');
 			echo $OUTPUT->heading(get_string('comment_add', 'slideshow'));
 			echo get_string('comment_instructions', 'slideshow');
-			$htmledit = isset($slideshow->htmlcaptions) ? $slideshow->htmlcaptions:0;
-			$mform = new mod_slideshow_media_form('media.php', array('htmledit' => $htmledit, 'context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num));
+			$media = slideshow_slide_get_media($slideshow->id, $img_num);
+			$mform = new mod_slideshow_media_form('media.php', array('context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num, 'media' => $media));
 			$mform->display();
 	} else {
 		echo get_string('noauth','slideshow','');
