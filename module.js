@@ -8,11 +8,6 @@ M.local_slideshow = {
     init : function(Y){
 			this.Y = Y;
 			this.slide = this.Y.one("#slide");
-			var slideRegion = this.slide.get("region");
-			this.slideTop = slideRegion.top;
-			this.slideRight = slideRegion.right;
-			this.slideBottom = slideRegion.bottom;
-			this.slideLeft = slideRegion.left;
 
 			this.mediaOutline = this.Y.one("#media_outline");
 			this.mediaOutline.plug(this.Y.Plugin.Drag);
@@ -28,17 +23,20 @@ M.local_slideshow = {
 			var y = parseInt(this.Y.one("#id_mediaY").get("value"), 10);
 			if(!isNaN(x) && !isNaN(y)) {
 				// Absolute coordinates, have to add slide's start coords.
-				this.mediaOutline.setXY([this.slideLeft + x, this.slideTop + y]);
+				this.mediaOutline.setXY([this.slide.get("region").left + x, this.slide.get("region").top + y]);
 			}
 
-			this.slide.on("click", this.getMediaCoords);
+			this.slide.on("click", this.updateMediaCoords);
     },
-		getMediaCoords : function(e) {
+
+		// Sets the media X and Y values taken from the draggable box's topleft X, Y coords.
+		updateMediaCoords : function(e) {
 			var x = M.local_slideshow.mediaOutline.getX();
 			var y = M.local_slideshow.mediaOutline.getY();
-			var relativeMX = x - M.local_slideshow.slide.get("region").left;
-			var relativeMY = y - M.local_slideshow.slide.get("region").top;
-			M.local_slideshow.Y.one("#id_mediaX").set("value", relativeMX);
-			M.local_slideshow.Y.one("#id_mediaY").set("value", relativeMY);
+			// Relative to the slide instead of absolute page coords.
+			var relativeX = x - M.local_slideshow.slide.get("region").left;
+			var relativeY = y - M.local_slideshow.slide.get("region").top;
+			M.local_slideshow.Y.one("#id_mediaX").set("value", relativeX);
+			M.local_slideshow.Y.one("#id_mediaY").set("value", relativeY);
 		},
   }
