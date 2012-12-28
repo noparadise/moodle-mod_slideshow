@@ -47,7 +47,8 @@
 		}
 
 /// Print header.
-    $PAGE->set_url('/mod/slideshow/view.php',array('id' => $cm->id));    
+    $PAGE->set_url('/mod/slideshow/view.php',array('id' => $cm->id));
+		$PAGE->set_title(get_string('pluginname', 'mod_slideshow') . ': ' . $slideshow->name);
     $PAGE->set_button($OUTPUT->update_module_button($cm->id, 'slideshow'));
     if ($autoshow) { // auto progress of images, no crumb trail
         $slideshow->layout = 9; //layout 9 prevents thumbnails being created
