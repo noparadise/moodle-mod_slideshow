@@ -17,11 +17,14 @@ M.local_slideshow = {
 			// Set the outline box to the correct size and position.
 			this.updateMediaOutlineSize();
 			
-			var x = parseInt(this.Y.one("#id_mediaX").get("value"), 10);
-			var y = parseInt(this.Y.one("#id_mediaY").get("value"), 10);
+			var x = parseInt(this.Y.one("input[name=mediaX]").get("value"), 10);
+			var y = parseInt(this.Y.one("input[name=mediaY]").get("value"), 10);
 			if(!isNaN(x) && !isNaN(y)) {
 				// Absolute coordinates, have to add slide's start coords.
 				this.mediaOutline.setXY([this.slide.get("region").left + x, this.slide.get("region").top + y]);
+			}
+			else {
+				this.mediaOutlin.setXY([this.slide.get("region").left, this.slide.get("region").top]);
 			}
 
 			this.slide.on("click", this.updateMediaCoords);
@@ -36,8 +39,8 @@ M.local_slideshow = {
 			// Relative to the slide instead of absolute page coords.
 			var relativeX = x - M.local_slideshow.slide.get("region").left;
 			var relativeY = y - M.local_slideshow.slide.get("region").top;
-			M.local_slideshow.Y.one("#id_mediaX").set("value", relativeX);
-			M.local_slideshow.Y.one("#id_mediaY").set("value", relativeY);
+			M.local_slideshow.Y.one("input[name=mediaX]").set("value", relativeX);
+			M.local_slideshow.Y.one("input[name=mediaY]").set("value", relativeY);
 		},
 
 		updateMediaOutlineSize : function() {
