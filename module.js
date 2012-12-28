@@ -24,7 +24,7 @@ M.local_slideshow = {
 				this.mediaOutline.setXY([this.slide.get("region").left + x, this.slide.get("region").top + y]);
 			}
 			else {
-				this.mediaOutlin.setXY([this.slide.get("region").left, this.slide.get("region").top]);
+				this.mediaOutline.setXY([this.slide.get("region").left, this.slide.get("region").top]);
 			}
 
 			this.slide.on("click", this.updateMediaCoords);
