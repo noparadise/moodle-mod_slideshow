@@ -36,6 +36,8 @@ class restore_slideshow_activity_structure_step extends restore_activity_structu
         $paths[] = new restore_path_element('slideshow', '/activity/slideshow');
         $paths[] = new restore_path_element('slideshow_caption', '/activity/slideshow/captions/caption');
 				$paths[] = new restore_path_element('slideshow_comment', '/activity/slideshow/comments/comment');
+				$paths[] = new restore_path_element('slideshow_read_position', '/activity/slideshow/read_positions/read_position');
+				$paths[] = new restore_path_element('slideshow_media_entry', '/activity/slideshow/media/media_entry');
 
         // Return the paths wrapped into standard activity structure
         return $this->prepare_activity_structure($paths);
@@ -73,7 +75,7 @@ class restore_slideshow_activity_structure_step extends restore_activity_structu
         $data = (object)$data;
         $oldid = $data->id;
 
-        $data->slideshow = $this->get_new_parentid('slideshow');
+        $data->slideshowid = $this->get_new_parentid('slideshow');
 
         $newitemid = $DB->insert_record('slideshow_comments', $data);
         $this->set_mapping('slideshow_comment', $oldid, $newitemid);
@@ -85,19 +87,19 @@ class restore_slideshow_activity_structure_step extends restore_activity_structu
         $data = (object)$data;
         $oldid = $data->id;
 
-        $data->slideshow = $this->get_new_parentid('slideshow');
+        $data->slideshowid = $this->get_new_parentid('slideshow');
 
         $newitemid = $DB->insert_record('slideshow_read_positions', $data);
         $this->set_mapping('slideshow_read_position', $oldid, $newitemid);
     }
 
-	protected function process_slideshow_media($data) {
+	protected function process_slideshow_media_entry($data) {
         global $DB;
 
         $data = (object)$data;
         $oldid = $data->id;
 
-        $data->slideshow = $this->get_new_parentid('slideshow');
+        $data->slideshowid = $this->get_new_parentid('slideshow');
 
         $newitemid = $DB->insert_record('slideshow_media', $data);
         $this->set_mapping('slideshow_media_entry', $oldid, $newitemid);
