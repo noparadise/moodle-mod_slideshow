@@ -76,8 +76,8 @@
     
 			// Display the actual form.
 			require_once('edit_form.php');
-			echo $OUTPUT->heading(get_string('comment_add', 'slideshow'));
-			echo get_string('comment_instructions', 'slideshow');
+			echo $OUTPUT->heading(get_string('media_add', 'slideshow'));
+			echo get_string('media_instructions', 'slideshow');
 			$media = slideshow_slide_get_media($slideshow->id, $img_num);
 			$mform = new mod_slideshow_media_form('media.php', array('context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num, 'media' => $media));
 			$mform->display();

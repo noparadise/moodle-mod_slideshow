@@ -52,6 +52,20 @@ $string['comment_insert_error'] = 'There was an error inserting the comment into
 $string['comment_add'] = 'Add a comment to this slide';
 $string['comment_instructions'] = 'Comments are public and viewable by all.';
 $string['comments_header'] = 'Comments';
+
+// for media
+$string['media'] = 'Media';
+$string['media_add'] = 'Add/edit media for this slide';
+$string['media_instructions'] = 'Paste the URL to a Youtube or Vimeo video in the URL box. You can specify height and width and also drag the video box for position.';
+$string['media_header'] = 'Media';
+$string['media_insert_error'] = 'There was an error inserting the media into the database.';
+$string['media_update_error'] = 'There was an error updating the media information into the database.';
+$string['media_edit_url'] = 'URL';
+$string['media_edit_x'] = 'X position';
+$string['media_edit_y'] = 'Y position';
+$string['media_edit_width'] = 'Width';
+$string['media_edit_height'] = 'Height';
+$string['media_edit_position'] = 'Drag this box to the desired position for your media';
  
 // for config.html
 $string['configmaxbytes'] = 'Largest filesize permissible (Kb) before the image is resized and saved';

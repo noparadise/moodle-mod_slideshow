@@ -236,7 +236,7 @@
             }
             if (has_capability('moodle/course:update',$context)){
                 echo '<li><a href="captions.php?id='.$cm->id.'">'.get_string('edit_captions', 'slideshow').'</a></li>';
-								echo '<li><a href="media.php?id=' . $cm->id . '&img_num=' . $img_num . '">Add/edit media</a></li>';
+								echo '<li><a href="media.php?id=' . $cm->id . '&img_num=' . $img_num . '">' . get_string('media_add', 'slideshow') . '</a></li>';
             }
 						echo '</ul>';
         } else {

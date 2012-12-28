@@ -98,23 +98,23 @@ class mod_slideshow_media_form extends moodleform {
 
 			$slide_width = $CFG->slideshow_maxwidth;
 			$slide_height = $CFG->slideshow_maxheight;
-			$img_html = '<div id="slide" style="background-image: url(\''.$thumbnail_path["base"].$slidenumber.'.'.$thumbnail_path["extension"].'\'); width: ' . $slide_width . 'px; height:' . $slide_height . 'px;"><span id="media_outline" style="border: 1px solid #000; padding: 20px; margin-top: 20px; display: block; width: 50px; height: 50px; background: #B5D045; cursor: hand; cursor: pointer;">Drag me</span></div>';
+			$img_html = '<div id="slide" style="background-image: url(\''.$thumbnail_path["base"].$slidenumber.'.'.$thumbnail_path["extension"].'\'); width: ' . $slide_width . 'px; height:' . $slide_height . 'px;"><span id="media_outline" style="border: 1px solid #000; padding: 20px; margin-top: 20px; display: block; width: 50px; height: 50px; background: #B5D045; cursor: hand; cursor: pointer;">' . get_string('media_edit_position', 'slideshow') . '</span></div>';
 			$mform->addElement('html', $img_html); 
 
 
-			$mform->addElement('text', 'mediaurl', 'URL for media:');
+			$mform->addElement('text', 'mediaurl', get_string('media_edit_url', 'slideshow'));
 			$mform->setType('mediaurl', PARAM_TEXT);
 
-			$mform->addElement('text', 'mediaX', 'Media X position');
+			$mform->addElement('text', 'mediaX', get_string('media_edit_x', 'slideshow'));
 			$mform->setType('mediaX', PARAM_INT);
 
-			$mform->addElement('text', 'mediaY', 'Media Y position');
+			$mform->addElement('text', 'mediaY', get_string('media_edit_y', 'slideshow'));
 			$mform->setType('mediaY', PARAM_INT);
 
-			$mform->addElement('text', 'mediawidth', 'Media width');
+			$mform->addElement('text', 'mediawidth', get_string('media_edit_width', 'slideshow'));
 			$mform->setType('mediawidth', PARAM_INT);
 			
-			$mform->addElement('text', 'mediaheight', 'Media height');
+			$mform->addElement('text', 'mediaheight', get_string('media_edit_height', 'slideshow'));
 			$mform->setType('mediaheight', PARAM_INT);
 
 			if($media) {
