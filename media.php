@@ -29,7 +29,16 @@
 				redirect("view.php?id=$id");
 				die;
 			}
-			slideshow_write_media($form, $slideshow);
+			if($form->mediadelete) {
+				if($media = slideshow_slide_get_media($form->slideshowid, $form->slidenumber)) {
+					if(! $DB->delete_records("slideshow_media", array('slideshowid' => $form->slideshowid, 'slidenumber' => $form->slidenumber))) {
+						print_error("Error deleting media.");
+					}
+				}
+			}
+			else {
+				slideshow_write_media($form, $slideshow);
+			}
 			redirect("view.php?id=$id&img_num=$form->slidenumber");
 			die;
     }
