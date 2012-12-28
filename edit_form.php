@@ -98,17 +98,17 @@ class mod_slideshow_media_form extends moodleform {
 
 			$slide_width = $CFG->slideshow_maxwidth;
 			$slide_height = $CFG->slideshow_maxheight;
-			$img_html = '<div id="slide" style="background-image: url(\''.$thumbnail_path["base"].$slidenumber.'.'.$thumbnail_path["extension"].'\'); width: ' . $slide_width . 'px; height:' . $slide_height . 'px;"><span id="media_outline" style="border: 1px solid #000; padding: 20px; margin-top: 20px; display: block; width: 50px; height: 50px; background: #B5D045; cursor: hand; cursor: pointer;">' . get_string('media_edit_position', 'slideshow') . '</span></div>';
+			$img_html = '<div id="slide" style="background-image: url(\''.$thumbnail_path["base"].$slidenumber.'.'.$thumbnail_path["extension"].'\'); width: ' . $slide_width . 'px; height:' . $slide_height . 'px;"><span id="media_outline" style="border: 1px solid #000; padding: 20px; margin-top: 20px; display: block; width: 400px; height: 300px; background: #B5D045; cursor: hand; cursor: pointer;">' . get_string('media_edit_position', 'slideshow') . '</span></div>';
 			$mform->addElement('html', $img_html); 
 
 
 			$mform->addElement('text', 'mediaurl', get_string('media_edit_url', 'slideshow'));
 			$mform->setType('mediaurl', PARAM_TEXT);
 
-			$mform->addElement('text', 'mediaX', get_string('media_edit_x', 'slideshow'));
+			$mform->addElement('hidden', 'mediaX', get_string('media_edit_x', 'slideshow'));
 			$mform->setType('mediaX', PARAM_INT);
 
-			$mform->addElement('text', 'mediaY', get_string('media_edit_y', 'slideshow'));
+			$mform->addElement('hidden', 'mediaY', get_string('media_edit_y', 'slideshow'));
 			$mform->setType('mediaY', PARAM_INT);
 
 			$mform->addElement('text', 'mediawidth', get_string('media_edit_width', 'slideshow'));
@@ -124,6 +124,8 @@ class mod_slideshow_media_form extends moodleform {
 				$mform->setDefault('mediawidth', $media->width);
 				$mform->setDefault('mediaheight', $media->height);
 			}
+
+			$mform->addElement('checkbox', 'mediadelete', "Delete media from slide");
 
 			$mform->addElement('hidden', 'slideshowid', $slideshowid);
 			$mform->setType('slideshowid', PARAM_RAW);
