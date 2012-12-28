@@ -5,5 +5,5 @@
 					'Maxheight ?',get_string("configmaxheight", "slideshow"), '480'));
 	$settings->add(new admin_setting_configselect('slideshow_securepix', 
 					'Secure pix ?',get_string("securepix", "slideshow"),'0',
-					array('0' => 'No', '1' => 'Yes')));
+					array('0' => get_string('no'), '1' => get_string('yes'))));
 ?>

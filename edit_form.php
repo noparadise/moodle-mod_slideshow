@@ -41,7 +41,7 @@ class mod_slideshow_edit_form extends moodleform {
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_RAW);
         $mform->setDefault('id', $context->instanceid);
-        $this->add_action_buttons(true, 'Save');
+        $this->add_action_buttons(true);
     }
 }
 class mod_slideshow_comment_form extends moodleform {
