@@ -76,7 +76,10 @@
         # Delete any dependent records here #
         $module_id = $DB->get_record("modules",array("name" => "slideshow"));
         $instance_id = $DB->get_record("course_modules",array("instance" => $id, "module" => $module_id->id));
-        if (! $DB->delete_records("slideshow_captions", array("slideshow" => $instance_id->id))) {
+				if (! $DB->delete_records("slideshow_captions", array("slideshow" => $slideshow->id))
+					|| ! $DB->delete_records("slideshow_comments", array("slideshowid" => $slideshow->id))
+					|| ! $DB->delete_records("slideshow_media", array("slideshowid" => $slideshow->id))
+					|| ! $DB->delete_records("slideshow_read_positions", array("slideshowid" => $slideshow->id))) {
             $result = false;
         } else {
             if (! $DB->delete_records("slideshow", array("id" => $slideshow->id))) {
