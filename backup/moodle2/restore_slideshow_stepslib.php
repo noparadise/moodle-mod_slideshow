@@ -91,6 +91,18 @@ class restore_slideshow_activity_structure_step extends restore_activity_structu
         $this->set_mapping('slideshow_read_position', $oldid, $newitemid);
     }
 
+	protected function process_slideshow_media($data) {
+        global $DB;
+
+        $data = (object)$data;
+        $oldid = $data->id;
+
+        $data->slideshow = $this->get_new_parentid('slideshow');
+
+        $newitemid = $DB->insert_record('slideshow_media', $data);
+        $this->set_mapping('slideshow_media_entry', $oldid, $newitemid);
+    }
+
     protected function after_execute() {
         // Add slideshow related files, no need to match by itemname (just internally handled context)
         $this->add_related_files('mod_slideshow', 'content', null);
