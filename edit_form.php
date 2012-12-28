@@ -76,4 +76,45 @@ class mod_slideshow_comment_form extends moodleform {
 			$this->add_action_buttons(true, 'Save');
     }
 }
+
+/**
+ * Defines the form for adding/editing a media element to a slide.
+ */
+class mod_slideshow_media_form extends moodleform {
+    function definition() {
+			global $CFG;
+			
+			$mform = $this->_form;
+			$context = $this->_customdata['context'];
+			$slideshowid = $this->_customdata['slideshowid'];
+			$slidenumber = $this->_customdata['slidenumber'];
+
+			$thumbnail_path = slideshow_get_thumbnail_path($context);
+			// FIXME Naïve way to get path to the full-size slide.
+			$thumbnail_path["base"] = str_replace("thumb_", "resized_", $thumbnail_path["base"]);
+
+			$mform->addElement('header', 'header', '('.$slidenumber.'.'.$thumbnail_path["extension"].')');
+
+			$slide_width = $CFG->slideshow_maxwidth;
+			$slide_height = $CFG->slideshow_maxheight;
+			$img_html = '<img id="slide" src="'.$thumbnail_path["base"].$slidenumber.'.'.$thumbnail_path["extension"].'" width="' . $slide_width . '" height="' . $slide_height . '" />';
+			$mform->addElement('html', $img_html); 
+
+			$mform->addElement('text', 'mediaX', 'Media X position');
+			$mform->setType('mediaX', PARAM_INT);
+
+			$mform->addElement('text', 'mediaY', 'Media Y position');
+			$mform->setType('mediaY', PARAM_INT);
+
+			$mform->addElement('hidden', 'slideshowid', $slideshowid);
+			$mform->setType('slideshowid', PARAM_RAW);
+
+			$mform->addElement('hidden', 'slidenumber', $slidenumber);
+			$mform->setType('slidenumber', PARAM_RAW);
+			
+			$mform->addElement('hidden', 'id', $context->instanceid);
+			$mform->setType('id', PARAM_RAW);
+			$this->add_action_buttons(true, 'Save');
+    }
+}
 ?>

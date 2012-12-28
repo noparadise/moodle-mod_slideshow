@@ -46,7 +46,7 @@
 		$jsmodule = array(
                 'name' => 'mod_slideshow',
                 'fullpath' => '/mod/slideshow/module.js',
-                'requires' => array());
+                'requires' => array("node", "datatype-number"));
    $PAGE->requires->js_init_call('M.local_slideshow.init',
                  null, false, $jsmodule);
 
