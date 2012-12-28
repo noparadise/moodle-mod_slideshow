@@ -45,10 +45,16 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
         $caption = new backup_nested_element('caption', array('id'), array(
             'slideshow','image', 'title', 'caption'));
 
+		$comments = new backup_nested_element('comments');
+		$comment = new backup_nested_element('comment', array('id'), array('slideshowid', 'userid', 'slidenumber', 'slidecomment'));
+
 		// Build the tree
 
         $slideshow->add_child($captions);
         $captions->add_child($caption);
+
+				$slideshow->add_child($comments);
+				$comments->add_child($comment);
 
         // Define sources
         $slideshow->set_source_table('slideshow', array('id' => backup::VAR_ACTIVITYID));
@@ -57,6 +63,11 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
               FROM {slideshow_captions}
              WHERE slideshow = ? ",
             array(backup::VAR_PARENTID));
+				$comment->set_source_sql("
+						SELECT *
+							FROM {slideshow_comments}
+						WHERE slideshowid = ? ",
+						array(backup::VAR_PARENTID));
 
 		// Define id annotations
         // (none)
