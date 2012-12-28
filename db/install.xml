@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/slideshow/db" VERSION="20080313" COMMENT="XMLDB file for Moodle mod/slideshow"
+<XMLDB PATH="mod/slideshow/db" VERSION="20121228" COMMENT="XMLDB file for Moodle mod/slideshow"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
     <TABLE NAME="slideshow" COMMENT="Defines slideshow instance" NEXT="slideshow_captions">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="course"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="name"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="course"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="name"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="course" NEXT="location"/>
-        <FIELD NAME="location" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="layout"/>
-        <FIELD NAME="layout" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="location" NEXT="filename"/>
-        <FIELD NAME="filename" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="layout" NEXT="delaytime"/>
-        <FIELD NAME="delaytime" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="7" SEQUENCE="false" PREVIOUS="filename" NEXT="centred"/>
-        <FIELD NAME="centred" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="delaytime" NEXT="autobgcolor"/>
-        <FIELD NAME="autobgcolor" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="centred" NEXT="timemodified"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="autobgcolor" NEXT="htmlcaptions"/>
-        <FIELD NAME="htmlcaptions" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="1" SEQUENCE="false" PREVIOUS="timemodified" NEXT="keeporiginals"/>
-        <FIELD NAME="keeporiginals" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="1" SEQUENCE="false" PREVIOUS="htmlcaptions" />
+        <FIELD NAME="location" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="layout"/>
+        <FIELD NAME="layout" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="location" NEXT="filename"/>
+        <FIELD NAME="filename" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="layout" NEXT="delaytime"/>
+        <FIELD NAME="delaytime" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="7" SEQUENCE="false" PREVIOUS="filename" NEXT="centred"/>
+        <FIELD NAME="centred" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="delaytime" NEXT="autobgcolor"/>
+        <FIELD NAME="autobgcolor" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="centred" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="autobgcolor" NEXT="htmlcaptions"/>
+        <FIELD NAME="htmlcaptions" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" PREVIOUS="timemodified" NEXT="keeporiginals"/>
+        <FIELD NAME="keeporiginals" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" PREVIOUS="htmlcaptions"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
@@ -28,20 +28,20 @@
     </TABLE>
     <TABLE NAME="slideshow_captions" COMMENT="stores slideshow captions" PREVIOUS="slideshow" NEXT="slideshow_comments">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="slideshow" />
-        <FIELD NAME="slideshow" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="image"/>
-        <FIELD NAME="image" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" PREVIOUS="slideshow" NEXT="title" />
-        <FIELD NAME="title" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" PREVIOUS="image" NEXT="caption" />
-        <FIELD NAME="caption" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" PREVIOUS="title" />
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="slideshow"/>
+        <FIELD NAME="slideshow" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="image"/>
+        <FIELD NAME="image" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="slideshow" NEXT="title"/>
+        <FIELD NAME="title" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="image" NEXT="caption"/>
+        <FIELD NAME="caption" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="title"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="slideshow" UNIQUE="false" FIELDS="slideshow"/>
       </INDEXES>
-			</TABLE>
-			<TABLE NAME="slideshow_comments" COMMENT="Comments and the slideshow they belong to. Name truncated due to XMLDB editor." PREVIOUS="slideshow_captions" NEXT="slideshow_read_positions">
+    </TABLE>
+    <TABLE NAME="slideshow_comments" COMMENT="Comments and the slideshow they belong to. Name truncated due to XMLDB editor." PREVIOUS="slideshow_captions" NEXT="slideshow_read_positions">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="slideshowid"/>
         <FIELD NAME="slideshowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
@@ -57,7 +57,7 @@
         <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="slideshow_read_positions" COMMENT="Users' last read positions for the slideshows. Name truncated by XMLDB editor." PREVIOUS="slideshow_comments">
+    <TABLE NAME="slideshow_read_positions" COMMENT="Users' last read positions for the slideshows. Name truncated by XMLDB editor." PREVIOUS="slideshow_comments" NEXT="slideshow_media">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="slideshowid"/>
         <FIELD NAME="slideshowid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
@@ -72,13 +72,23 @@
         <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="slideshow_media" COMMENT="slideshow_media table retrofitted from MySQL" PREVIOUS="slideshow_read_positions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="19" NOTNULL="true" SEQUENCE="true" NEXT="slideshowid"/>
+        <FIELD NAME="slideshowid" TYPE="int" LENGTH="19" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="slidenumber"/>
+        <FIELD NAME="slidenumber" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" PREVIOUS="slideshowid" NEXT="url"/>
+        <FIELD NAME="url" TYPE="char" LENGTH="1333" NOTNULL="false" SEQUENCE="false" PREVIOUS="slidenumber" NEXT="width"/>
+        <FIELD NAME="width" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" PREVIOUS="url" NEXT="height"/>
+        <FIELD NAME="height" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" PREVIOUS="width" NEXT="x"/>
+        <FIELD NAME="x" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" PREVIOUS="height" NEXT="y"/>
+        <FIELD NAME="y" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" PREVIOUS="x"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="mdl_slidmedi_sli_ix" UNIQUE="false" FIELDS="slideshowid"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
-  <STATEMENTS>
-    <STATEMENT NAME="insert log_display" TYPE="insert" TABLE="log_display" COMMENT="Initial insert of records on table log_display">
-      <SENTENCES>
-        <SENTENCE TEXT="(module, action, mtable, field) VALUES ('slideshow', 'add', 'slideshow', 'name')" />
-        <SENTENCE TEXT="(module, action, mtable, field) VALUES ('slideshow', 'update', 'slideshow', 'name')" />
-      </SENTENCES>
-    </STATEMENT>
-  </STATEMENTS>
 </XMLDB>
