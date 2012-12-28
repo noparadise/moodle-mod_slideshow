@@ -201,7 +201,7 @@
 					$left = $media->x;
 					echo '<div id="media_wrapper" style="position: absolute; z-index: 1000">';
 					echo '<div id="media" style="position: relative; top: ' . $top . 'px; left: ' . $left . 'px">';
-					echo $PAGE->get_renderer('core', 'media')->embed_url(new moodle_url('http://www.youtube.com/watch?v=9dvDlCZpeEo'));
+					echo $PAGE->get_renderer('core', 'media')->embed_url(new moodle_url($media->url), '', $media->width, $media->height); // Empty string is because 2nd param is title attr.
 					echo '</div>';
 					echo '</div>';
 				}
@@ -236,6 +236,7 @@
             }
             if (has_capability('moodle/course:update',$context)){
                 echo '<li><a href="captions.php?id='.$cm->id.'">'.get_string('edit_captions', 'slideshow').'</a></li>';
+								echo '<li><a href="media.php?id=' . $cm->id . '&img_num=' . $img_num . '">Add/edit media</a></li>';
             }
 						echo '</ul>';
         } else {
@@ -271,15 +272,17 @@
 		$comments = array();
 		$comments = slideshow_slide_comments_array($slideshow->id, $img_num);
 
-		foreach($comments as $comment) : ?>
-			<?php $user = $DB->get_record('user', array('id' => $comment->userid)); ?>
-			<li>
-				<div>
-					<p><?php echo $user->firstname . ' ' . $user->lastname ?></p>
-					<div style="padding-left: 15px;"><?php echo $comment->slidecomment ?></div>
-				</div>
-			</li>
-		<?php endforeach; ?>
+		if($comments){
+			foreach($comments as $comment) : ?>
+				<?php $user = $DB->get_record('user', array('id' => $comment->userid)); ?>
+				<li>
+					<div>
+						<p><?php echo $user->firstname . ' ' . $user->lastname ?></p>
+						<div style="padding-left: 15px;"><?php echo $comment->slidecomment ?></div>
+					</div>
+				</li>
+			<?php endforeach; 
+		}?>
 
 		</ul>
 			<a href="comments.php?id=<?php echo $cm->id ?>&img_num=<?php echo $img_num ?>"><?php print_string('comment_add', 'slideshow') ?></a>

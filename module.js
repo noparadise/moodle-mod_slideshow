@@ -17,10 +17,16 @@ M.local_slideshow = {
 			this.mediaOutline = this.Y.one("#media_outline");
 			this.mediaOutline.plug(this.Y.Plugin.Drag);
 			
-			// Set the outline box to the correct position.
+			// Set the outline box to the correct size and position.
+			var width = parseInt(this.Y.one("#id_mediawidth").get("value"), 10);
+			var height = parseInt(this.Y.one("#id_mediaheight").get("value"), 10);
+			if(!isNaN(width) && !isNaN(height)) {
+				this.mediaOutline.set("offsetWidth", width);
+				this.mediaOutline.set("offsetHeight", height);
+			}
 			var x = parseInt(this.Y.one("#id_mediaX").get("value"), 10);
 			var y = parseInt(this.Y.one("#id_mediaY").get("value"), 10);
-			if(x) {
+			if(!isNaN(x) && !isNaN(y)) {
 				// Absolute coordinates, have to add slide's start coords.
 				this.mediaOutline.setXY([this.slideLeft + x, this.slideTop + y]);
 			}

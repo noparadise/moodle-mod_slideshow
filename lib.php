@@ -249,8 +249,9 @@
 			$newMedia->slideshowid = $slideshow->id;
 			$newMedia->slidenumber = $mediaForm->slidenumber;
 			$newMedia->url = $mediaForm->mediaurl;
-			$newMedia->width = $mediaForm->mediawidth;
-			$newMedia->height = $mediaForm->mediaheight;
+			// Default size of 400x300.
+			$newMedia->width = ($mediaForm->mediawidth != '' ? $mediaForm->mediawidth : 400);
+			$newMedia->height = ($mediaForm->mediaheight != '' ? $mediaForm->mediaheight : 300);
 			$newMedia->x = $mediaForm->mediaX;
 			$newMedia->y = $mediaForm->mediaY;
 			$newMedia->userid = $USER->id;
