@@ -13,8 +13,6 @@ class mod_slideshow_edit_form extends moodleform {
         
 				$imagenum = 1;
 				$thumbnail_path = slideshow_get_thumbnail_path($context);
-				// Need to trim 'img' from end of base path, as $caption["image"] contains imgX where X is the number of the slide.
-				$thumbnail_path["base"] = substr($thumbnail_path["base"], 0, -3);
 				
 				foreach ($captions as $caption) {
 					$mform->addElement('header', 'header', '<img src="'.$thumbnail_path["base"].$caption["image"].'.'.$thumbnail_path["extension"].'"> ('.$caption['image'].'.'.$thumbnail_path["extension"].')');
@@ -88,6 +86,7 @@ class mod_slideshow_media_form extends moodleform {
 			$context = $this->_customdata['context'];
 			$slideshowid = $this->_customdata['slideshowid'];
 			$slidenumber = $this->_customdata['slidenumber'];
+			$imgfilename = $this->_customdata['imgfilename'];
 			$media = $this->_customdata['media'];
 
 			$thumbnail_path = slideshow_get_thumbnail_path($context);
@@ -98,7 +97,7 @@ class mod_slideshow_media_form extends moodleform {
 
 			$slide_width = $CFG->slideshow_maxwidth;
 			$slide_height = $CFG->slideshow_maxheight;
-			$img_html = '<div id="slide" style="background-image: url(\''.$thumbnail_path["base"].$slidenumber.'.'.$thumbnail_path["extension"].'\'); width: ' . $slide_width . 'px; height:' . $slide_height . 'px;"><span id="media_outline" style="border: 1px solid #000; padding: 20px; margin-top: 20px; display: block; width: 400px; height: 300px; background: #B5D045; cursor: hand; cursor: pointer;">' . get_string('media_edit_position', 'slideshow') . '</span></div>';
+			$img_html = '<div id="slide" style="background-image: url(\''.$thumbnail_path["base"].$imgfilename.'.'.$thumbnail_path["extension"].'\'); width: ' . $slide_width . 'px; height:' . $slide_height . 'px;"><span id="media_outline" style="border: 1px solid #000; padding: 20px; margin-top: 20px; display: block; width: 400px; height: 300px; background: #B5D045; cursor: hand; cursor: pointer;">' . get_string('media_edit_position', 'slideshow') . '</span></div>';
 			$mform->addElement('html', $img_html); 
 
 

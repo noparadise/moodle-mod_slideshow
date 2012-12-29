@@ -59,7 +59,8 @@
                  null, false, $jsmodule);
 
 		// Print the main part of the page
-    $img_count = 0;
+		$img_count = 0;
+		$img_filename = "";
 		if(has_capability('moodle/course:update',$coursecontext)){
 			$conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
 			$file_records =  $DB->get_records('files', $conditions);
@@ -77,6 +78,7 @@
 							$filename = str_replace('resized_','',$filename);
 						}
 					}
+					$img_filename = $filename;
 					$image = slideshow_filetidy($filename);
 					$captions[$image] = slideshow_caption_array($slideshow->id,$image);
 				}
@@ -87,8 +89,9 @@
 			require_once('edit_form.php');
 			echo $OUTPUT->heading(get_string('media_add', 'slideshow'));
 			echo get_string('media_instructions', 'slideshow');
+			$img_filename = pathinfo($img_filename, PATHINFO_FILENAME);
 			$media = slideshow_slide_get_media($slideshow->id, $img_num);
-			$mform = new mod_slideshow_media_form('media.php', array('context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num, 'media' => $media));
+			$mform = new mod_slideshow_media_form('media.php', array('context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num, 'imgfilename' => $img_filename, 'media' => $media));
 			$mform->display();
 	} else {
 		echo get_string('noauth','slideshow','');

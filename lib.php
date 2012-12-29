@@ -350,7 +350,7 @@
 
 			$urlroot = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_slideshow/content/0';
 			$baseurl = $urlroot.$showdir;
-			$thumburl = $baseurl . 'thumb_img';
+			$thumburl = $baseurl . 'thumb_';
         
 			return array("base" => $thumburl, "extension" => $extension);
 		}
