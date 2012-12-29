@@ -35,6 +35,7 @@
     add_to_log($course->id, "slideshow", "captions", "captions.php?id=$cm->id", "$slideshow->id");
 /// Print header.
     $PAGE->set_url('/mod/slideshow/captions.php',array('id' => $cm->id));
+		$PAGE->set_title(get_string('pluginname', 'mod_slideshow') . ': ' . $slideshow->name);
     $PAGE->navbar->add($slideshow->name);
     echo $OUTPUT->header();
     $coursecontext = get_context_instance(CONTEXT_COURSE, $course->id, MUST_EXIST);
