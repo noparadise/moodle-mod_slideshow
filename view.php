@@ -51,6 +51,7 @@
 		$PAGE->set_title(get_string('pluginname', 'mod_slideshow') . ': ' . $slideshow->name);
     $PAGE->set_button($OUTPUT->update_module_button($cm->id, 'slideshow'));
     if ($autoshow) { // auto progress of images, no crumb trail
+			echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>';
         $slideshow->layout = 9; //layout 9 prevents thumbnails being created
         if (!$pause){
             if(!($autodelay = $slideshow->delaytime)>0) {     // set seconds wait for auto popup progress
