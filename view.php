@@ -184,8 +184,6 @@
         }
         if ($slideshow->filename == 1){
             echo '<p>'.$captionstring.'<p>';
-        } else if ($slideshow->filename == 3){
-            echo '<table cellpadding="5"><tr><td valign="top">';
 				}
 
         // display main picture, with link to next page and plain text for alt and title tags
@@ -210,8 +208,6 @@
        if ($slideshow->filename == 2){
 						$margin_top = $CFG->slideshow_maxheight + 20;
             echo '<p style="margin: ' . $margin_top . 'px 0 0 0;">'.$captionstring.'</p>';
-        } else if ($slideshow->filename == 3){
-            echo '</td><td valign="top"><p>'.$captionstring.'</td></tr></table>';
         }
             
         if ($slideshow->layout == 2){
@@ -268,6 +264,9 @@
 
 				// Comments column.
 				echo '<div style="float: left; width: 350px; margin: 70px 0 0 20px;">';
+				if($slideshow->filename == 3) {
+					echo '<p>' . $captionstring . '</p>';
+				}
 				echo '    <h3>' . get_string('comments_header', 'slideshow') . '</h3>';
 				echo '    <ul style="list-style: none;">';
 
