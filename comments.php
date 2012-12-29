@@ -70,7 +70,8 @@
 				echo $OUTPUT->heading(get_string('comment_add', 'slideshow'));
 				echo get_string('comment_instructions', 'slideshow');
 				$htmledit = isset($slideshow->htmlcaptions) ? $slideshow->htmlcaptions:0;
-				$mform = new mod_slideshow_comment_form('comments.php', array('htmledit' => $htmledit, 'context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num));
+				$img_filename = pathinfo($filename, PATHINFO_FILENAME);
+				$mform = new mod_slideshow_comment_form('comments.php', array('htmledit' => $htmledit, 'context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num, 'imgfilename' => $img_filename));
 				$mform->display();
 			} else {
 				echo get_string('noauth','slideshow','');
