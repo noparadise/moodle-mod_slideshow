@@ -259,43 +259,49 @@
             }
             echo '<a href="?id='.($cm->id).'&img_num='.fmod($img_num+1,$img_count).'&autoshow='.$autoshow."\">&gt;&gt;</a></p>";
         }
+
+				// Close slide column.
+				echo'</div>';
+				if($slideshow->centred) {
+					echo '</div>';
+				}
+
+				// Comments column.
+				echo '<div style="float: left; width: 350px; margin: 70px 0 0 20px;">';
+				echo '    <h3>' . get_string('comments_header', 'slideshow') . '</h3>';
+				echo '    <ul style="list-style: none;">';
+
+						// Show comments, if there are any.
+						$comments = array();
+						$comments = slideshow_slide_comments_array($slideshow->id, $img_num);
+
+						if($comments){
+							foreach($comments as $comment) : ?>
+								<?php $user = $DB->get_record('user', array('id' => $comment->userid)); ?>
+								<li>
+									<div>
+										<p><?php echo $user->firstname . ' ' . $user->lastname ?></p>
+										<div style="padding-left: 15px;"><?php echo $comment->slidecomment ?></div>
+									</div>
+								</li>
+<?php				endforeach;
+						}
+
+						echo '</ul>';
+						echo '    <a href="comments.php?id=' . $cm->id . '&img_num=' . $img_num . '">' . get_string('comment_add', 'slideshow') . '</a>';
+						echo '</div>';
+
     } else {
         echo '<p>'.get_string('none_found', 'slideshow').' <b>'.$showdir.'</b></p>';
         echo '<p><b>'.$error.'</b></p>';
+				
+				// Close slide column.
+				echo'</div>';
+				if($slideshow->centred) {
+					echo '</div>';
+				}
     }
 
-		echo'</div>';
-		if($slideshow->centred) {
-			echo '</div>';
-		}
-?>
-
-<div style="float: left; width: 350px; margin: 70px 0 0 20px;">
-	<h3><?php print_string('comments_header', 'slideshow'); ?></h3>
-	<ul style="list-style: none;">
-
-	<?php
-		// Show comments, if there are any.
-		$comments = array();
-		$comments = slideshow_slide_comments_array($slideshow->id, $img_num);
-
-		if($comments){
-			foreach($comments as $comment) : ?>
-				<?php $user = $DB->get_record('user', array('id' => $comment->userid)); ?>
-				<li>
-					<div>
-						<p><?php echo $user->firstname . ' ' . $user->lastname ?></p>
-						<div style="padding-left: 15px;"><?php echo $comment->slidecomment ?></div>
-					</div>
-				</li>
-			<?php endforeach; 
-		}?>
-
-		</ul>
-			<a href="comments.php?id=<?php echo $cm->id ?>&img_num=<?php echo $img_num ?>"><?php print_string('comment_add', 'slideshow') ?></a>
-	</div>
-
-<?php		
 /// Finish the page
     if ($autoshow){
         echo '</body></html>';
