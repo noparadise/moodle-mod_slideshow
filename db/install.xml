@@ -16,8 +16,9 @@
         <FIELD NAME="centred" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="delaytime" NEXT="autobgcolor"/>
         <FIELD NAME="autobgcolor" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="centred" NEXT="timemodified"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="autobgcolor" NEXT="htmlcaptions"/>
-        <FIELD NAME="htmlcaptions" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" PREVIOUS="timemodified" NEXT="keeporiginals"/>
-        <FIELD NAME="keeporiginals" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" PREVIOUS="htmlcaptions"/>
+        <FIELD NAME="htmlcaptions" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" PREVIOUS="timemodified" NEXT="commentsallowed"/>
+        <FIELD NAME="commentsallowed" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" PREVIOUS="htmlcaptions" NEXT="keeporiginals"/>
+        <FIELD NAME="keeporiginals" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" PREVIOUS="commentsallowed"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

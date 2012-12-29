@@ -152,7 +152,11 @@
     sort($filearray);
 
     if ($slideshow->centred){
-			$container_width = $CFG->slideshow_maxwidth + 320;
+			$container_width = $CFG->slideshow_maxwidth;
+			// Add space for second column if comments are allowed or if captions are displayed to the right.
+			if($slideshow->commentsallowed || $slideshow->filename == 3) {
+				$container_width += 320;
+			}
 			echo '<div style="width: ' . $container_width . 'px; margin: 0px auto;">';
 		}
 
@@ -263,15 +267,18 @@
 					echo '</div>';
 				}
 
-				// Comments column.
-				echo '<div style="float: left; width: 350px; margin: 70px 0 0 20px;">';
-				if($slideshow->filename == 3) {
-					echo '<p>' . $captionstring . '</p>';
-				}
-				echo '    <h3>' . get_string('comments_header', 'slideshow') . '</h3>';
-				echo '    <ul style="list-style: none;">';
+				// Second column only displayed if comments are allowed or captions are shown to the right.
+				if($slideshow->commentsallowed || $slideshow->filename==3) {
+					// Fixed width because, depending on user's resolution, maxwidth could cause the second column to be very narrow.
+					// In that case it makes more sense for the column to be cleared under the image.
+					echo '<div style="float: left; width: 350px; margin: 70px 0 0 20px;">';
+					if($slideshow->filename == 3) {
+						echo '<p>' . $captionstring . '</p>';
+					}
 
-						// Show comments, if there are any.
+					if($slideshow->commentsallowed) {
+						echo '<h3>' . get_string('comments_header', 'slideshow') . '</h3>';
+						echo '<ul style="list-style: none;">';
 						$comments = array();
 						$comments = slideshow_slide_comments_array($slideshow->id, $img_num);
 
@@ -288,8 +295,10 @@
 						}
 
 						echo '</ul>';
-						echo '    <a href="comments.php?id=' . $cm->id . '&img_num=' . $img_num . '">' . get_string('comment_add', 'slideshow') . '</a>';
+						echo '<a href="comments.php?id=' . $cm->id . '&img_num=' . $img_num . '">' . get_string('comment_add', 'slideshow') . '</a>';
 						echo '</div>';
+						}
+				}
 
     } else {
         echo '<p>'.get_string('none_found', 'slideshow').' <b>'.$showdir.'</b></p>';

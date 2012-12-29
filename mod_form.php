@@ -45,6 +45,9 @@ class mod_slideshow_mod_form extends moodleform_mod {
     $mform->setDefault('centred', 1);
 	$mform->addElement('select', 'htmlcaptions', get_string("htmlcaptions", "slideshow"),$ynopts);
     $mform->setDefault('htmlcaptions', 1);
+	$mform->addElement('select', 'commentsallowed', get_string("comments", "slideshow"),$ynopts);
+    $mform->setDefault('commentsallowed', 1);
+
     $dtimes = array (0=>get_string("noautoplay", "slideshow"), 
                         5=>'5s',
                         10=>'10s',

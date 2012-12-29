@@ -91,6 +91,21 @@ function xmldb_slideshow_upgrade($oldversion=0) {
 				upgrade_mod_savepoint(true, 2012122800, 'slideshow');
 		}
 
+    if ($oldversion < 2012122900) {
+
+        // Define field commentsallowed to be added to slideshow
+        $table = new xmldb_table('slideshow');
+        $field = new xmldb_field('commentsallowed', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '1', 'htmlcaptions');
+
+        // Conditionally launch add field commentsallowed
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // slideshow savepoint reached
+        upgrade_mod_savepoint(true, 2012122900, 'slideshow');
+    }
+
     return true;
 }
 

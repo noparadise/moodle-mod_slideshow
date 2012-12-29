@@ -23,6 +23,7 @@ $string['centred'] = 'Centred?';
 $string['showtime'] = 'Slideshow popup delay time:';
 $string['noautoplay'] = 'No autoplay';
 $string['htmlcaptions'] = 'HTML editor for captions?';
+$string['comments'] = 'Allow comments?';
 
 // for view.php
 $string['none_found'] = 'No images found in main files directory';
@@ -52,6 +53,7 @@ $string['comment_insert_error'] = 'There was an error inserting the comment into
 $string['comment_add'] = 'Add a comment to this slide';
 $string['comment_instructions'] = 'Comments are public and viewable by all.';
 $string['comments_header'] = 'Comments';
+$string['comments_not_allowed'] = 'Comments are disabled for this slideshow.';
 
 // for media
 $string['media'] = 'Media';
