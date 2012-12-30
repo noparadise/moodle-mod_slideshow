@@ -342,7 +342,7 @@
 
 			foreach ($file_records as $file_record) {
 					// check only image files
-					if (  preg_match("/\.jpe?g$/", $file_record->filename) || preg_match("/\.gif$/", $file_record->filename) || preg_match("/\.png$/", $file_record->filename)) {
+					if (  preg_match("/\.jpe?g$/i", $file_record->filename) || preg_match("/\.gif$/i", $file_record->filename) || preg_match("/\.png$/i", $file_record->filename)) {
 							$showdir = $file_record->filepath;
 							$extension = pathinfo($file_record->filename, PATHINFO_EXTENSION);
 					}
