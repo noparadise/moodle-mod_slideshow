@@ -38,7 +38,7 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
 		// Define each element separated
         $slideshow = new backup_nested_element('slideshow', array('id'), array(
             'name', 'location', 'layout', 'filename',
-            'delaytime','centred','autobgcolor','timemodified','htmlcaptions','keeporiginals'));
+            'delaytime','centred','autobgcolor','timemodified','htmlcaptions', 'commentsallowed', 'keeporiginals'));
 
 		$captions = new backup_nested_element('captions');
 
