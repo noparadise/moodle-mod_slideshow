@@ -217,7 +217,9 @@
             
         if ($slideshow->layout == 2){
             // print thumbnail row
+			echo "<div id='thumbnail_container' style='float: left; margin-top: ".($CFG->slideshow_maxheight + 10)."px;'>";
             slideshow_display_thumbs($filearray);
+			echo "</div>";
         }
           
         if (!$autoshow){
