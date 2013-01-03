@@ -94,7 +94,7 @@ class mod_slideshow_media_form extends moodleform {
 			// FIXME Naïve way to get path to the full-size slide.
 			$thumbnail_path["base"] = str_replace("thumb_", "resized_", $thumbnail_path["base"]);
 
-			$mform->addElement('header', 'header', '('.$slidenumber.'.'.$thumbnail_path["extension"].')');
+			$mform->addElement('header', 'header', '('.$img_filename.'.'.$thumbnail_path["extension"].')');
 
 			$slide_width = $CFG->slideshow_maxwidth;
 			$slide_height = $CFG->slideshow_maxheight;
