@@ -55,7 +55,7 @@ class mod_slideshow_comment_form extends moodleform {
 
 			$thumbnail_path = slideshow_get_thumbnail_path($context);
 		        
-			$mform->addElement('header', 'header', '<img src="'.$thumbnail_path["base"].$img_filename.'.'.$thumbnail_path["extension"].'"> ('.$slidenumber.'.'.$thumbnail_path["extension"].')');
+			$mform->addElement('header', 'header', '<img src="'.$thumbnail_path["base"].$img_filename.'.'.$thumbnail_path["extension"].'"> ('.$img_filename.'.'.$thumbnail_path["extension"].')');
 			if ($htmledit) {
 				$mform->addElement('editor', 'slidecomment', get_string('comment', 'slideshow'));
 				$mform->setType('comment', PARAM_RAW);

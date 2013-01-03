@@ -42,10 +42,10 @@
 		/// Print the main part of the page
 		if($slideshow->commentsallowed) {
 			$img_count = 0;
+			$img_filenames = array();
 			if(has_capability('moodle/course:update',$coursecontext)){
 				$conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
 				$file_records =  $DB->get_records('files', $conditions);
-				$captions = array();
 				foreach ($file_records as $filerecord) {
 					$filename = $filerecord->filename;
 					if ( preg_match("#\.jpe?g$#i", $filename) || preg_match("#\.gif$#i", $filename) || preg_match("#\.png$#i", $filename)) {
@@ -59,18 +59,17 @@
 								$filename = str_replace('resized_','',$filename);
 							}
 						}
-						$image = slideshow_filetidy($filename);
-						$captions[$image] = slideshow_caption_array($slideshow->id,$image);
+						$img_filenames[] = $filename;
 					}
 				}
-				sort($captions);
+				sort($img_filenames);
 
 				// Display the actual form.
 				require_once('edit_form.php');
 				echo $OUTPUT->heading(get_string('comment_add', 'slideshow'));
 				echo get_string('comment_instructions', 'slideshow');
 				$htmledit = isset($slideshow->htmlcaptions) ? $slideshow->htmlcaptions:0;
-				$img_filename = pathinfo($filename, PATHINFO_FILENAME);
+				$img_filename = pathinfo($img_filenames[$img_num], PATHINFO_FILENAME);
 				$mform = new mod_slideshow_comment_form('comments.php', array('htmledit' => $htmledit, 'context' => $context, 'slideshowid' => $slideshow->id, 'slidenumber' => $img_num, 'imgfilename' => $img_filename));
 				$mform->display();
 			} else {
