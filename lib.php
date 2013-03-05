@@ -149,12 +149,12 @@
         $thumb_html_arr = array();
         foreach ($filearray as $filename) {
             if ($this_img == $img_num){
-                $bstyle = 'border:3px solid #369';
+                $bclass = 'sdthbnum';
             } else {
-                $bstyle = 'border:2px solid white';
+                $bclass = 'sdthb';
             }
             echo "<a href=\"?id=".($cm->id).'&img_num='.$this_img.'&lr=0">'; 
-            echo '<img src="'.$baseurl.'thumb_'.$filename.'" alt="'.$filename.'" title="'.$filename.'" style="'.$bstyle.'">';
+            echo '<img src="'.$baseurl.'thumb_'.$filename.'" alt="'.$filename.'" title="'.$filename.'" class="'.$bclass.'">';
             echo '</a> ';
             $this_img++;
         }
@@ -168,7 +168,7 @@
     function slideshow_caption_array($id,$image) {
         global $DB;
         $captions = array();
-        if($caption = $DB->get_record_select('slideshow_captions', 'slideshow = '. $id . ' AND image = "'.$image.'"')) {
+        if($caption = $DB->get_record_select('slideshow_captions', 'slideshow = '. $id . ' AND image = \''.$image.'\'')) {
             $captions['image'] = $image;
             $captions['title'] = $caption->title;
             $captions['caption'] = $caption->caption;

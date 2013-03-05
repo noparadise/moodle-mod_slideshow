@@ -1,5 +1,5 @@
 <?php
-
+require_once($CFG->dirroot.'/mod/slideshow/db/upgradelib.php');
 function xmldb_slideshow_upgrade($oldversion=0) {
 	global $DB;
 	$dbman = $DB->get_manager();
@@ -105,8 +105,12 @@ function xmldb_slideshow_upgrade($oldversion=0) {
         // slideshow savepoint reached
         upgrade_mod_savepoint(true, 2012122900, 'slideshow');
     }
+    if($oldversion<2012122900){
+    	//migration of course files
+    	slideshow_migrate_20();
+    	
+    }
 
     return true;
 }
-
 ?>
