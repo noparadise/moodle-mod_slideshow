@@ -4,7 +4,7 @@
 $string['modulename'] = 'Slideshow';
 $string['pluginname'] = 'Slideshow';
 $string['modulenameplural'] = 'Slideshows';
-$string['pluginadministration'] = 'Admin';
+$string['pluginadministration'] = 'Slideshow';
 $string['slideshowsfound'] = 'Slideshows in course {$a}';
 
 // for mod.html
@@ -75,4 +75,32 @@ $string['configmaxwidth'] = 'Maximum width for images (pixels)';
 $string['configmaxheight'] = 'Maximum height for images (pixels)';
 $string['keeporiginals'] = 'Keep originals?<br />If yes, the original image will be shown for printing. If no, only the resized version of the image is kept and server space is maximised.';
 $string['securepix'] = 'This will include javascript to prevent easy saving of the image and remove the direct link.';
-?>
+
+$string['modulename_help'] = 'The slideshow module enables teachers to upload images/videos and organize them into a slideshow with comments.
+<h3>Usage</h3>
+<strong>Slideshow creation</strong>
+
+<p>On your computer:
+<ul>
+<li>Export a presentation to images (for example OpenOffice\'s export to HTML).</li>
+<li>Create a zip file of the folder with images.</li>
+</p>
+<p>In Moodle:
+Add a "slideshow" activity.
+Upload the zip file and unzip it.
+</p>
+<strong>Slideshow usage</strong>
+<p>Click on a thumbnail to navigate, click on the image to progress. The reading
+position is kept for each slideshow. One YouTube or Vimeo video can be added to
+each slide and positioned by dragging and dropping. Comments can be added to
+each slideshow.
+</p>
+<p>
+Users with teacher role and upwards can choose
+<ul>
+<li>Whether to display captions, titles and edit them</li>
+<li>Position of thumbnails and captions relative to main image</li>
+<li>Options for auto-progress of slides in new window</li>
+<li>Slide maximum dimensions (x and y pixels)</li>
+<li>Whether to include some javascript to disable right-clicking and remove the "image in new window" link</li>
+</p>';
