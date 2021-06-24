@@ -15,7 +15,7 @@
             case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
             case FEATURE_GRADE_HAS_GRADE:         return false;
             case FEATURE_GRADE_OUTCOMES:          return false;
-			case FEATURE_BACKUP_MOODLE2:          return true;
+            case FEATURE_BACKUP_MOODLE2:          return true;
 
             default: return null;
         }
@@ -51,7 +51,7 @@
         return $data->id;
     }
 
-	function slideshow_update_instance($data, $mform) {
+    function slideshow_update_instance($data, $mform) {
         global $CFG, $DB;
         $cmid        = $data->coursemodule;
         $draftitemid = $data->location;
@@ -67,8 +67,8 @@
         return true;
     }
 
-	function slideshow_delete_instance($id) {
-	global $DB;
+    function slideshow_delete_instance($id) {
+    global $DB;
         if (! $slideshow = $DB->get_record("slideshow", array("id" => $id))) {
             return false;
         }
@@ -76,7 +76,10 @@
         # Delete any dependent records here #
         $module_id = $DB->get_record("modules",array("name" => "slideshow"));
         $instance_id = $DB->get_record("course_modules",array("instance" => $id, "module" => $module_id->id));
-        if (! $DB->delete_records("slideshow_captions", array("slideshow" => $instance_id->id))) {
+				if (! $DB->delete_records("slideshow_captions", array("slideshow" => $slideshow->id))
+					|| ! $DB->delete_records("slideshow_comments", array("slideshowid" => $slideshow->id))
+					|| ! $DB->delete_records("slideshow_media", array("slideshowid" => $slideshow->id))
+					|| ! $DB->delete_records("slideshow_read_positions", array("slideshowid" => $slideshow->id))) {
             $result = false;
         } else {
             if (! $DB->delete_records("slideshow", array("id" => $slideshow->id))) {
@@ -146,12 +149,12 @@
         $thumb_html_arr = array();
         foreach ($filearray as $filename) {
             if ($this_img == $img_num){
-                $bstyle = 'border:3px solid #369';
+                $bclass = 'sdthbnum';
             } else {
-                $bstyle = 'border:2px solid white';
+                $bclass = 'sdthb';
             }
-            echo "<a href=\"?id=".($cm->id).'&img_num='.$this_img.'">'; 
-            echo '<img src="'.$baseurl.'thumb_'.$filename.'" alt="'.$filename.'" title="'.$filename.'" style="'.$bstyle.'">';
+            echo "<a href=\"?id=".($cm->id).'&img_num='.$this_img.'&lr=0">'; 
+            echo '<img src="'.$baseurl.'thumb_'.$filename.'" alt="'.$filename.'" title="'.$filename.'" class="'.$bclass.'">';
             echo '</a> ';
             $this_img++;
         }
@@ -165,7 +168,7 @@
     function slideshow_caption_array($id,$image) {
         global $DB;
         $captions = array();
-        if($caption = $DB->get_record_select('slideshow_captions', 'slideshow = '. $id . ' AND image = "'.$image.'"')) {
+        if($caption = $DB->get_record_select('slideshow_captions', 'slideshow = '. $id . ' AND image = \''.$image.'\'')) {
             $captions['image'] = $image;
             $captions['title'] = $caption->title;
             $captions['caption'] = $caption->caption;
@@ -173,28 +176,129 @@
             $captions['image'] = $image;
             $captions['title'] = '';
             $captions['caption'] = '';
-		}
+        }
         return ($captions);
     }
     
     function slideshow_write_captions($captions,$slideshow){
-	global $DB;
+    global $DB;
         $DB->delete_records('slideshow_captions', array('slideshow' => $slideshow->id));
         for ($i=1;$i<$captions->imagenum;$i++) {
+            $newcaption = new object();
             $newcaption->slideshow = $slideshow->id;
             $newcaption->image = $captions->{"image".$i};
             $newcaption->title = $captions->{"title".$i};
-			if ($slideshow->htmlcaptions) {
-				$newcaption->caption = $captions->{"caption".$i}['text'];
-			} else {
-				$newcaption->caption = $captions->{"caption".$i};
-			}
+            if ($slideshow->htmlcaptions) {
+                $newcaption->caption = $captions->{"caption".$i}['text'];
+            } else {
+                $newcaption->caption = $captions->{"caption".$i};
+            }
             if (!$newcaption->id = $DB->insert_record('slideshow_captions', $newcaption)) {
                 print_error('Could not insert caption');
             }
         }
     }
 
+		function slideshow_slide_comments_array($slideshowid, $slidenumber) {
+			global $DB;
+			$comments = array();
+			if($comments = $DB->get_records('slideshow_comments', array('slideshowid' => $slideshowid, 'slidenumber' =>  $slidenumber))) {
+				return $comments;
+			} else {
+				return false;
+			}
+		}
+    
+		/**
+		 * Write a comment into the database.
+		 */
+    function slideshow_write_comment($commentForm, $slideshow){
+			global $DB;
+			global $USER;
+
+			$newComment = new object();
+			$newComment->slideshowid = $slideshow->id;
+			$newComment->slidenumber = $commentForm->slidenumber;
+			if ($slideshow->htmlcaptions) {
+				$newComment->slidecomment = $commentForm->slidecomment['text'];
+			} else {
+				$newComment->slidecomment = $commentForm->slidecomment;
+			}
+			$newComment->userid = $USER->id;
+
+			if (!$newComment->id = $DB->insert_record('slideshow_comments', $newComment)) {
+				print_error(get_string('slideshow', 'comment_insert_error'));
+			}
+    }
+
+		function slideshow_slide_get_media($slideshowid, $slidenumber) {
+			global $DB;
+			$media = array();
+			if($media = $DB->get_record('slideshow_media', array('slideshowid' => $slideshowid, 'slidenumber' =>  $slidenumber))) {
+				return $media;
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		 * Write media settings into the database.
+		 */
+    function slideshow_write_media($mediaForm, $slideshow){
+			global $DB;
+			global $USER;
+
+			$newMedia = new object();
+			$newMedia->slideshowid = $slideshow->id;
+			$newMedia->slidenumber = $mediaForm->slidenumber;
+			$newMedia->url = $mediaForm->mediaurl;
+			// Default size of 400x300.
+			$newMedia->width = ($mediaForm->mediawidth != '' ? $mediaForm->mediawidth : 400);
+			$newMedia->height = ($mediaForm->mediaheight != '' ? $mediaForm->mediaheight : 300);
+			$newMedia->x = $mediaForm->mediaX;
+			$newMedia->y = $mediaForm->mediaY;
+			$newMedia->userid = $USER->id;
+
+
+			// Conditions to select an existing media entry for a given slideshow and slide number.
+			$mediaconditions = array("slideshowid" => $slideshow->id, "slidenumber" => $mediaForm->slidenumber);
+
+			// A media entry already exists, update it instead of adding a new one.
+			if($DB->record_exists('slideshow_media', $mediaconditions)) {
+				$newMedia->id = $DB->get_record('slideshow_media', $mediaconditions)->id;
+				if(!$newMedia->id = $DB->update_record('slideshow_media', $newMedia)) {
+					print_error("Error updating media.");
+				}
+			// There wasn't a media entry: create it.
+			} else {
+				if(!$newMedia->id = $DB->insert_record('slideshow_media', $newMedia)) {
+					print_error("Error adding media.");
+				}
+			}	
+    }
+
+
+		/**
+		 * Inserts or updates a record containing the last slide viewed by a given $user.
+		 * $lastreadconditions contains the user id and slideshow id, for finding the correct
+		 * record.
+		 */
+		function slideshow_save_last_position($slideshow, $user, $slidenumber, $lastreadconditions) {
+			global $DB;
+
+			$lastRead = new object();
+			$lastRead->slideshowid = $slideshow->id;
+			$lastRead->userid = $user->id;
+			$lastRead->slidenumber = $slidenumber;
+
+			if($DB->record_exists('slideshow_read_positions', $lastreadconditions)) {
+				$lastRead->id = $DB->get_record('slideshow_read_positions', $lastreadconditions)->id;
+				$DB->update_record('slideshow_read_positions', $lastRead);
+			} else {
+				$DB->insert_record('slideshow_read_positions', $lastRead);
+			}
+		}
+		
     function slideshow_secure_script ($securitylevel){
         if ($securitylevel){
             echo'<script language=JavaScript>
@@ -221,7 +325,33 @@
 		if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
 			send_file_not_found();
 		}
-		send_stored_file($file,86400,0,false,$file->get_filename(),false);
+		send_stored_file($file,86400,0,false,array('filename' => $file->get_filename()),false);
 		die;
 	}
+
+		// Returns array with base path to thumbnails (excluding slide number) in first position
+		// and extension in second position. To display an image concatenate array["base"],
+		// slidenumber and array["extension"].
+		// TODO fix mixed format slides (e.g. slide 1 is png, slide 2 jpg).
+		function slideshow_get_thumbnail_path($context) {
+			global $DB;
+			global $CFG;
+
+			$conditions = array('contextid'=>$context->id, 'component'=>'mod_slideshow','filearea'=>'content','itemid'=>0);
+			$file_records =  $DB->get_records('files', $conditions);
+
+			foreach ($file_records as $file_record) {
+					// check only image files
+					if (  preg_match("/\.jpe?g$/i", $file_record->filename) || preg_match("/\.gif$/i", $file_record->filename) || preg_match("/\.png$/i", $file_record->filename)) {
+							$showdir = $file_record->filepath;
+							$extension = pathinfo($file_record->filename, PATHINFO_EXTENSION);
+					}
+			}
+
+			$urlroot = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_slideshow/content/0';
+			$baseurl = $urlroot.$showdir;
+			$thumburl = $baseurl . 'thumb_';
+        
+			return array("base" => $thumburl, "extension" => $extension);
+		}
 ?>

@@ -35,6 +35,7 @@
     add_to_log($course->id, "slideshow", "captions", "captions.php?id=$cm->id", "$slideshow->id");
 /// Print header.
     $PAGE->set_url('/mod/slideshow/captions.php',array('id' => $cm->id));
+		$PAGE->set_title(get_string('pluginname', 'mod_slideshow') . ': ' . $slideshow->name);
     $PAGE->navbar->add($slideshow->name);
     echo $OUTPUT->header();
     $coursecontext = get_context_instance(CONTEXT_COURSE, $course->id, MUST_EXIST);
@@ -47,11 +48,11 @@
 		$captions = array();
 		foreach ($file_records as $filerecord) {
 			$filename = $filerecord->filename;
-			if ( eregi("\.jpe?g$", $filename) || eregi("\.gif$", $filename) || eregi("\.png$", $filename)) {
-				if (eregi("^thumb_", $filename)) {
+			if ( preg_match("#\.jpe?g$#i", $filename) || preg_match("#\.gif$#i", $filename) || preg_match("#\.png$#i", $filename)) {
+				if (preg_match("#^thumb_?#i", $filename)) {
 					continue;
 				}
-				if (eregi("^resized_", $filename)) {
+				if (preg_match("#^resized_#i", $filename)) {
 					if ($slideshow->keeporiginals) {
 						continue;
 					}else{

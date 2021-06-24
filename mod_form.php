@@ -27,7 +27,7 @@ class mod_slideshow_mod_form extends moodleform_mod {
     }
     $mform->addRule('name', null, 'required', null, 'client');
     $this->add_intro_editor(true);
-    $ynopts = array(0=>'No',1=>'Yes'); 
+    $ynopts = array(0=>get_string('no'),1=>get_string('yes')); 
     $mform->addElement('filemanager', 'location', get_string('maindirectory', 'slideshow'), null,
                     array('subdirs' => 1, 'accepted_types' => array('*.jpg','*.gif','*.png','*.zip') ));
     $options = array (0=>get_string("display_none", "slideshow"),
@@ -45,6 +45,9 @@ class mod_slideshow_mod_form extends moodleform_mod {
     $mform->setDefault('centred', 1);
 	$mform->addElement('select', 'htmlcaptions', get_string("htmlcaptions", "slideshow"),$ynopts);
     $mform->setDefault('htmlcaptions', 1);
+	$mform->addElement('select', 'commentsallowed', get_string("comments", "slideshow"),$ynopts);
+    $mform->setDefault('commentsallowed', 1);
+
     $dtimes = array (0=>get_string("noautoplay", "slideshow"), 
                         5=>'5s',
                         10=>'10s',

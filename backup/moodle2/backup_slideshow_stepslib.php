@@ -38,17 +38,35 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
 		// Define each element separated
         $slideshow = new backup_nested_element('slideshow', array('id'), array(
             'name', 'location', 'layout', 'filename',
-            'delaytime','centred','autobgcolor','timemodified','htmlcaptions','keeporiginals'));
+            'delaytime','centred','autobgcolor','timemodified','htmlcaptions', 'commentsallowed', 'keeporiginals'));
 
 		$captions = new backup_nested_element('captions');
 
         $caption = new backup_nested_element('caption', array('id'), array(
             'slideshow','image', 'title', 'caption'));
 
+		$comments = new backup_nested_element('comments');
+		$comment = new backup_nested_element('comment', array('id'), array('slideshowid', 'userid', 'slidenumber', 'slidecomment'));
+
+		$read_positions = new backup_nested_element('read_positions');
+		$read_position = new backup_nested_element('read_position', array('id'), array('slideshowid', 'userid', 'slidenumber'));
+
+		$media = new backup_nested_element('media');
+		$media_entry = new backup_nested_element('media_entry', array('id'), array('slideshowid', 'slidenumber', 'url', 'width', 'height', 'x', 'y'));
+
 		// Build the tree
 
         $slideshow->add_child($captions);
         $captions->add_child($caption);
+
+				$slideshow->add_child($comments);
+				$comments->add_child($comment);
+
+				$slideshow->add_child($read_positions);
+				$read_positions->add_child($read_position);
+
+				$slideshow->add_child($media);
+				$media->add_child($media_entry);
 
         // Define sources
         $slideshow->set_source_table('slideshow', array('id' => backup::VAR_ACTIVITYID));
@@ -57,6 +75,21 @@ class backup_slideshow_activity_structure_step extends backup_activity_structure
               FROM {slideshow_captions}
              WHERE slideshow = ? ",
             array(backup::VAR_PARENTID));
+				$comment->set_source_sql("
+						SELECT *
+							FROM {slideshow_comments}
+						WHERE slideshowid = ? ",
+						array(backup::VAR_PARENTID));
+				$read_position->set_source_sql("
+						SELECT *
+							FROM {slideshow_read_positions}
+						WHERE slideshowid = ? ",
+						array(backup::VAR_PARENTID));
+				$media_entry->set_source_sql("
+						SELECT *
+							FROM {slideshow_media}
+						WHERE slideshowid = ? ",
+						array(backup::VAR_PARENTID));
 
 		// Define id annotations
         // (none)
